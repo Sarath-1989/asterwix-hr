@@ -1219,7 +1219,8 @@ var OFFICE = {lat:25.2048, lng:55.2708, radius:200};
 // ── SCREEN HELPER ──
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach(function(s){ s.classList.remove("on"); });
-  document.getElementById(id).classList.add("on");
+  var el = document.getElementById(id);
+  if (el) el.classList.add("on");
 }
 
 // ── TOGGLE PASSWORD ──
@@ -1457,9 +1458,18 @@ function finishLogin(username) {
   var cfg = ROLE_CFG[user.role] || ROLE_CFG.employee;
   CU.cfg = cfg;
 
-  showScreen("dummy"); // hide all screens
-  document.querySelectorAll(".screen").forEach(function(s){ s.classList.remove("on"); });
-  document.getElementById("APP").style.display = "block";
+  // Hide all login screens
+  document.querySelectorAll(".screen").forEach(function(s){
+    s.classList.remove("on");
+    s.style.display = "none";
+  });
+
+  // Show APP
+  var appEl = document.getElementById("APP");
+  if (appEl) {
+    appEl.style.display = "block";
+    appEl.classList.add("on");
+  }
 
   // Set logos
   var logos = ["sb-logo","ps-logo"];

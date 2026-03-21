@@ -296,9 +296,9 @@ input:checked+.slider:before{transform:translateX(18px)}
 /* MOBILE */
 @media(max-width:768px){
   :root{--sw:0px}
-  #SB{transform:translateX(-260px)}
+  #SB{transform:translateX(-260px);width:260px!important}
   #SB.open, #SB.mob-open{transform:translateX(0)}
-  #mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:190}
+  #mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199;-webkit-tap-highlight-color:transparent}
   #mob-overlay.on{display:block}
   #mob-btn{display:flex!important}
   #SB.mob-open{transform:translateX(0)!important}
@@ -434,9 +434,10 @@ input:checked+.slider:before{transform:translateX(18px)}
   </div>
 </div>
 
+<div id="mob-overlay" onclick="closeMob()"></div>
+
 <!-- ══ APP ══ -->
 <div id="APP">
-  <div id="mob-overlay" onclick="closeMob()"></div>
   <div id="SB">
     <div class="sb-logo"><img id="sb-logo" src="" alt="Asterwix"><br><span class="sb-tag" id="sb-tag">HR Portal</span></div>
     <div id="sb-nav"></div>
@@ -1964,7 +1965,7 @@ function initBackButtonHandler() {
   history.pushState({ page: "dash", app: true }, "", window.location.pathname);
 
   window.addEventListener("popstate", function(e) {
-    // If not logged in — prevent exit, go back to login
+    // Not logged in
     if (!CU) {
       history.pushState({ page: "login", app: false }, "", window.location.pathname);
       return;
@@ -1972,30 +1973,28 @@ function initBackButtonHandler() {
 
     // If mobile sidebar is open — close it first
     var sb = document.getElementById("SB");
-    if (sb && sb.classList.contains("mob-open")) {
+    if (sb && (sb.classList.contains("mob-open") || sb.classList.contains("open"))) {
       closeMob();
       history.pushState({ page: "current", app: true }, "", window.location.pathname);
       return;
     }
 
-    // If on dashboard — ask before exit
+    // Detect current page
     var activePage = document.querySelector(".page.on");
     var activeId   = activePage ? activePage.id.replace("pg-","") : "dash";
 
     if (activeId === "dash") {
-      // Show exit confirmation instead of exiting
-      if (confirm("Exit Asterwix HR Portal?")) {
-        // Allow exit — do nothing, browser will handle
-      } else {
-        // Stay in app
-        history.pushState({ page: "dash", app: true }, "", window.location.pathname);
+      // On dashboard — show native exit dialog
+      history.pushState({ page: "dash", app: true }, "", window.location.pathname);
+      if (typeof Android !== "undefined" && Android.exitApp) {
+        Android.exitApp();
       }
       return;
     }
 
-    // On any other page — go back to dashboard
-    history.pushState({ page: "dash", app: true }, "", window.location.pathname);
+    // Any other page — go back to dashboard
     goPage("dash");
+    history.pushState({ page: "dash", app: true }, "", window.location.pathname);
   });
 }
 
@@ -2026,17 +2025,23 @@ function safeRemove(key) {
 
 // ── MOBILE SIDEBAR ──
 function toggleMob() {
-  var sb  = document.getElementById("SB");
-  var ov  = document.getElementById("mob-overlay");
-  var open = sb && sb.classList.contains("mob-open");
-  if (sb) sb.classList.toggle("mob-open", !open);
-  if (ov) ov.classList.toggle("on", !open);
+  var sb   = document.getElementById("SB");
+  var ov   = document.getElementById("mob-overlay");
+  var isOpen = sb && (sb.classList.contains("mob-open") || sb.classList.contains("open"));
+  if (sb) {
+    sb.classList.toggle("mob-open", !isOpen);
+    sb.classList.toggle("open", !isOpen);
+  }
+  if (ov) ov.classList.toggle("on", !isOpen);
+  // Prevent body scroll when sidebar open on mobile
+  document.body.style.overflow = isOpen ? "" : "hidden";
 }
 function closeMob() {
   var sb = document.getElementById("SB");
   var ov = document.getElementById("mob-overlay");
-  if (sb) sb.classList.remove("mob-open");
+  if (sb) { sb.classList.remove("mob-open"); sb.classList.remove("open"); }
   if (ov) ov.classList.remove("on");
+  document.body.style.overflow = "";
 }
 
 // ── SCREEN HELPER ──

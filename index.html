@@ -1822,14 +1822,21 @@ function initGoPageHistory() {
 
 // ── SAFE STORAGE HELPERS ──
 var _memStore = {};
+var _storageOk = (function() {
+  try { sessionStorage.setItem("__t__","1"); sessionStorage.removeItem("__t__"); return true; }
+  catch(e) { return false; }
+})();
 function safeSet(key, val) {
-  try { sessionStorage.setItem(key, val); } catch(e) { _memStore[key] = val; }
+  if (_storageOk) { try { sessionStorage.setItem(key, val); return; } catch(e) {} }
+  _memStore[key] = val;
 }
 function safeGet(key) {
-  try { return sessionStorage.getItem(key); } catch(e) { return _memStore[key] || null; }
+  if (_storageOk) { try { return sessionStorage.getItem(key); } catch(e) {} }
+  return _memStore[key] || null;
 }
 function safeRemove(key) {
-  try { sessionStorage.removeItem(key); } catch(e) { delete _memStore[key]; }
+  if (_storageOk) { try { sessionStorage.removeItem(key); } catch(e) {} }
+  delete _memStore[key];
 }
 
 // ── MOBILE SIDEBAR ──

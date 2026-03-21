@@ -86,7 +86,7 @@ body{font-family:"Nunito Sans",sans-serif;background:var(--bg);color:var(--tx);f
 /* ── APP SHELL ── */
 #APP{display:none}
 #APP.on{display:block}
-#SB{position:fixed;top:0;left:0;bottom:0;width:var(--sw);background:var(--dark);display:flex;flex-direction:column;z-index:200;border-right:1px solid rgba(255,255,255,.09);overflow-y:auto}
+#SB{position:fixed;top:0;left:0;bottom:0;width:var(--sw);background:var(--dark);display:flex;flex-direction:column;z-index:200;border-right:1px solid rgba(255,255,255,.09);overflow-y:auto;transition:transform .25s ease}
 .sb-logo{padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,.09)}
 .sb-logo img{height:36px;filter:none;background:#fff;border-radius:6px;padding:5px 10px}
 .sb-tag{display:inline-block;margin-top:5px;font-family:"JetBrains Mono",monospace;font-size:7px;letter-spacing:2px;background:var(--green);color:#fff;padding:2px 7px;border-radius:2px;text-transform:uppercase}
@@ -297,8 +297,8 @@ input:checked+.slider:before{transform:translateX(18px)}
 @media(max-width:768px){
   :root{--sw:0px}
   #SB{transform:translateX(-260px);transition:transform .25s ease}
-  #SB.open{transform:translateX(0)}
-  #mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:150}
+  #SB.open, #SB.mob-open{transform:translateX(0)}
+  #mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:190}
   #mob-overlay.on{display:block}
   #mob-btn{display:flex!important}
   #SB.mob-open{transform:translateX(0)!important}
@@ -434,11 +434,10 @@ input:checked+.slider:before{transform:translateX(18px)}
   </div>
 </div>
 
-<!-- MOB OVERLAY -->
-<div id="mob-overlay" onclick="closeMob()"></div>
-
 <!-- ══ APP ══ -->
 <div id="APP">
+  <!-- MOB OVERLAY -->
+  <div id="mob-overlay" onclick="closeMob()"></div>
   <div id="SB">
     <div class="sb-logo"><img id="sb-logo" src="" alt="Asterwix"><br><span class="sb-tag" id="sb-tag">HR Portal</span></div>
     <div id="sb-nav"></div>
@@ -1866,16 +1865,19 @@ function safeRemove(key) {
 
 // ── MOBILE SIDEBAR ──
 function toggleMob() {
-  var sb  = document.getElementById("SB");
-  var ov  = document.getElementById("mob-overlay");
+  var sb   = document.getElementById("SB");
+  var ov   = document.getElementById("mob-overlay");
   var open = sb && sb.classList.contains("mob-open");
-  if (sb) sb.classList.toggle("mob-open", !open);
+  if (sb) {
+    sb.classList.toggle("mob-open", !open);
+    sb.classList.toggle("open", !open);
+  }
   if (ov) ov.classList.toggle("on", !open);
 }
 function closeMob() {
   var sb = document.getElementById("SB");
   var ov = document.getElementById("mob-overlay");
-  if (sb) sb.classList.remove("mob-open");
+  if (sb) { sb.classList.remove("mob-open"); sb.classList.remove("open"); }
   if (ov) ov.classList.remove("on");
 }
 
@@ -2257,7 +2259,7 @@ function goPage(id) {
   if (id === "dash") buildDash();
   if (id === "users") renderUsers();
   if (id === "checkin") { setTimeout(function(){ initCiMap(); getGPS(); }, 200); }
-  if (id === "payslips") { setTimeout(function(){ initPayslipPage(); }, 100); }
+  if (id === "payslips") { setTimeout(function(){ initPayslipPage(); }, 150); }
   if (id === "admin" && adminMap) { setTimeout(function(){ adminMap.invalidateSize(); }, 150); }
   if (id === "admin") { setTimeout(renderDeviceApprovals, 400); }
   closeMob();

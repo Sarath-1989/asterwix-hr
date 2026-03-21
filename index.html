@@ -296,7 +296,7 @@ input:checked+.slider:before{transform:translateX(18px)}
 /* MOBILE */
 @media(max-width:768px){
   :root{--sw:0px}
-  #SB{transform:translateX(-260px);transition:transform .25s ease}
+  #SB{transform:translateX(-260px)}
   #SB.open, #SB.mob-open{transform:translateX(0)}
   #mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:190}
   #mob-overlay.on{display:block}
@@ -436,7 +436,6 @@ input:checked+.slider:before{transform:translateX(18px)}
 
 <!-- ══ APP ══ -->
 <div id="APP">
-  <!-- MOB OVERLAY -->
   <div id="mob-overlay" onclick="closeMob()"></div>
   <div id="SB">
     <div class="sb-logo"><img id="sb-logo" src="" alt="Asterwix"><br><span class="sb-tag" id="sb-tag">HR Portal</span></div>
@@ -671,35 +670,193 @@ input:checked+.slider:before{transform:translateX(18px)}
           <button class="btn bdark" onclick="showToast('Downloading PDF...','')">&#128229; Download PDF</button>
         </div>
       </div>
-      <!-- Selector Card — rendered dynamically by initPayslipPage() -->
       <div id="ps-selector-wrap"></div>
-      <!-- Payslip Print CSS -->
       <style>
-        @media print {
-          #SB, .topbar, .phdr, #ps-selector, #toast { display:none!important; }
-          .main { margin-left:0!important; }
-          .page { padding:0!important; }
-          #ps-output { padding:0; }
-        }
-        .ps-wrap { background:#fff; border:1px solid #ccc; border-radius:10px; overflow:hidden; max-width:860px; margin:0 auto; font-size:13px; }
-        .ps-title { background:#1e3a8a; color:#fff; text-align:center; padding:10px; font-size:14px; font-weight:800; letter-spacing:.5px; }
-        .ps-table { width:100%; border-collapse:collapse; }
-        .ps-table td, .ps-table th { border:1px solid #ccc; padding:8px 10px; vertical-align:top; }
-        .ps-table th { background:#f0f4ff; font-weight:700; font-size:12px; }
-        .ps-label { font-weight:700; background:#f8f9fa; width:160px; font-size:12px; }
-        .ps-val { color:#1e3a8a; font-weight:600; }
-        .ps-section-hdr { background:#1e3a8a; color:#fff; text-align:center; font-weight:700; padding:7px 10px; font-size:13px; }
-        .ps-earn-hdr { background:#e8f4e8; font-weight:700; text-align:center; }
-        .ps-ded-hdr { background:#fce8e8; font-weight:700; text-align:center; }
-        .ps-total-row td { font-weight:800; background:#f0f4ff; }
-        .ps-net-row td { background:#1e3a8a; color:#fff; font-weight:900; font-size:14px; padding:10px; }
-        .ps-words-row td { font-style:italic; font-weight:700; background:#fffbeb; border:1px solid #fde68a; color:#92400e; font-size:11px; }
-        .ps-lop-row td { background:#fef2f2; color:#b91c1c; font-size:11px; font-weight:600; padding:7px 10px; }
-        .ps-stamp { display:flex; justify-content:space-between; padding:16px 20px; border-top:1px solid #ccc; margin-top:4px; font-size:11px; color:#666; }
-        .ps-currency-badge { display:inline-flex; align-items:center; gap:4px; background:#dbeafe; color:#1e3a8a; font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; font-family:monospace; }
+        @media print{#SB,.topbar,.phdr,#ps-selector-wrap,#toast{display:none!important}.main{margin-left:0!important}.page{padding:0!important}}
+        .ps-wrap{background:#fff;border:1px solid #ccc;border-radius:10px;overflow:hidden;max-width:860px;margin:0 auto;font-size:13px}
+        .ps-title{background:#1e3a8a;color:#fff;text-align:center;padding:10px;font-size:14px;font-weight:800;letter-spacing:.5px}
+        .ps-table{width:100%;border-collapse:collapse}
+        .ps-table td,.ps-table th{border:1px solid #ccc;padding:8px 10px;vertical-align:top}
+        .ps-table th{background:#f0f4ff;font-weight:700;font-size:12px}
+        .ps-label{font-weight:700;background:#f8f9fa;width:160px;font-size:12px}
+        .ps-val{color:#1e3a8a;font-weight:600}
+        .ps-section-hdr{background:#1e3a8a;color:#fff;text-align:center;font-weight:700;padding:7px 10px;font-size:13px}
+        .ps-earn-hdr{background:#e8f4e8;font-weight:700;text-align:center}
+        .ps-ded-hdr{background:#fce8e8;font-weight:700;text-align:center}
+        .ps-total-row td{font-weight:800;background:#f0f4ff}
+        .ps-net-row td{background:#1e3a8a;color:#fff;font-weight:900;font-size:14px;padding:10px}
+        .ps-words-row td{font-style:italic;font-weight:700;background:#fffbeb;border:1px solid #fde68a;color:#92400e;font-size:11px}
+        .ps-lop-row td{background:#fef2f2;color:#b91c1c;font-size:11px;font-weight:600;padding:7px 10px}
+        .ps-stamp{display:flex;justify-content:space-between;padding:16px 20px;border-top:1px solid #ccc;font-size:11px;color:#666}
+        .ps-currency-badge{display:inline-flex;align-items:center;gap:4px;background:#dbeafe;color:#1e3a8a;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;font-family:monospace}
       </style>
-      <!-- Payslip Output -->
-      <div id="ps-output"><div style="text-align:center;padding:40px;color:var(--mu);font-size:13px;">Select an employee and click <strong>Load Payslip</strong></div></div>
+      <div id="ps-output"><div style="text-align:center;padding:40px;color:var(--mu);font-size:13px;">Select a month and click <strong>Load Payslip</strong></div></div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="page" id="pg-profile">
+      <div class="phdr">
+        <div><div class="ptitle">My Profile</div><div class="psub">Personal information, documents &amp; bank details</div></div>
+        <button class="btn bdark" onclick="saveProfile()">&#128190; Save All Changes</button>
+      </div>
+
+      <!-- Notification banner (shown after bank update) -->
+      <div id="profile-notify" style="display:none" class="alert alblue" style="margin-bottom:16px">
+        <span>&#128276;</span><div id="profile-notify-msg">Bank details updated and sent to Accounts team.</div>
+      </div>
+
+      <div class="g2">
+        <!-- LEFT COLUMN -->
+        <div>
+          <!-- Profile Photo -->
+          <div class="card" style="margin-bottom:16px">
+            <div class="chdr"><div class="ctitle">&#128247; Profile Photo</div></div>
+            <div class="cbody" style="display:flex;align-items:center;gap:20px">
+              <div id="profile-photo-wrap" style="width:90px;height:90px;border-radius:50%;background:#e5e7eb;display:flex;align-items:center;justify-content:center;font-size:36px;overflow:hidden;border:3px solid var(--bord);flex-shrink:0">
+                <span id="profile-photo-placeholder">&#128100;</span>
+                <img id="profile-photo-img" src="" style="display:none;width:100%;height:100%;object-fit:cover">
+              </div>
+              <div>
+                <div style="font-weight:700;margin-bottom:6px;font-size:13px">Upload Photo</div>
+                <div style="font-size:11px;color:var(--mu);margin-bottom:10px">JPG, PNG up to 2MB. Square image recommended.</div>
+                <label style="cursor:pointer">
+                  <span class="btn bghost bsm">&#128247; Choose Photo</span>
+                  <input type="file" id="photo-upload" accept="image/*" style="display:none" onchange="handlePhotoUpload(this)">
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Basic Information -->
+          <div class="card" style="margin-bottom:16px">
+            <div class="chdr"><div class="ctitle">&#128100; Basic Information</div></div>
+            <div class="cbody">
+              <div class="frow">
+                <div class="fld"><label>Full Name</label><input id="pf-name" placeholder="Your full name"></div>
+                <div class="fld"><label>Phone Number</label><input id="pf-phone" placeholder="+971 50 000 0000" type="tel"></div>
+              </div>
+              <div class="frow c1">
+                <div class="fld"><label>Address</label><textarea id="pf-address" placeholder="Full residential address..." style="min-height:70px"></textarea></div>
+              </div>
+              <div class="frow c1">
+                <div class="fld"><label>Emergency Contact Number</label><input id="pf-emergency" placeholder="Emergency contact name &amp; number" type="tel"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Personal Details -->
+          <div class="card" style="margin-bottom:16px">
+            <div class="chdr"><div class="ctitle">&#128203; Personal Details</div></div>
+            <div class="cbody">
+              <div class="frow">
+                <div class="fld"><label>Date of Birth</label><input id="pf-dob" type="date"></div>
+                <div class="fld"><label>Marital Status</label>
+                  <select id="pf-marital">
+                    <option value="">Select...</option>
+                    <option value="Single">Single</option>
+                    <option value="Married">Married</option>
+                    <option value="Divorced">Divorced</option>
+                    <option value="Widowed">Widowed</option>
+                  </select>
+                </div>
+              </div>
+              <div class="frow">
+                <div class="fld"><label>Blood Group</label>
+                  <select id="pf-blood">
+                    <option value="">Select...</option>
+                    <option>A+</option><option>A-</option>
+                    <option>B+</option><option>B-</option>
+                    <option>AB+</option><option>AB-</option>
+                    <option>O+</option><option>O-</option>
+                  </select>
+                </div>
+                <div class="fld"><label>Nationality</label><input id="pf-nationality" placeholder="e.g. Indian, Emirati"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div>
+          <!-- Identity Documents -->
+          <div class="card" style="margin-bottom:16px">
+            <div class="chdr"><div class="ctitle">&#128274; Identity Verification <span style="color:#b91c1c;font-size:11px;font-weight:700">MANDATORY</span></div></div>
+            <div class="cbody">
+              <div class="alert alwarn" style="margin-bottom:14px"><span>&#9888;</span><div>Upload a valid government-issued ID. Accepted: Emirates ID, Passport, National ID.</div></div>
+              <div class="fld" style="margin-bottom:12px"><label>ID Type</label>
+                <select id="pf-id-type">
+                  <option value="">Select ID type...</option>
+                  <option value="Emirates ID">Emirates ID</option>
+                  <option value="Passport">Passport</option>
+                  <option value="National ID">National ID</option>
+                  <option value="Aadhaar Card">Aadhaar Card (India)</option>
+                </select>
+              </div>
+              <div class="fld" style="margin-bottom:12px"><label>ID Number</label><input id="pf-id-number" placeholder="ID / Passport number"></div>
+              <div class="fld" style="margin-bottom:12px"><label>Expiry Date</label><input id="pf-id-expiry" type="date"></div>
+
+              <!-- Upload zone -->
+              <div id="id-upload-zone" onclick="document.getElementById('id-doc-upload').click()"
+                style="border:2px dashed var(--bord);border-radius:10px;padding:20px;text-align:center;cursor:pointer;background:var(--surf);transition:border-color .2s"
+                ondragover="this.style.borderColor='#1e3a8a'" ondragleave="this.style.borderColor=''"
+                ondrop="handleIDDrop(event)">
+                <div style="font-size:28px;margin-bottom:8px">&#128196;</div>
+                <div style="font-weight:700;font-size:13px;margin-bottom:4px">Drop ID document here or click to upload</div>
+                <div style="font-size:11px;color:var(--mu)">PDF, JPG, PNG — max 5MB</div>
+                <input type="file" id="id-doc-upload" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="handleIDUpload(this)">
+              </div>
+              <div id="id-doc-preview" style="display:none;margin-top:10px;padding:10px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:12px;color:#166534;font-weight:600">
+                &#10003; <span id="id-doc-name">Document uploaded</span>
+                <button onclick="removeIDDoc()" style="float:right;border:none;background:none;color:#b91c1c;cursor:pointer;font-size:12px">&#10005; Remove</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bank Account Details -->
+          <div class="card" style="margin-bottom:16px">
+            <div class="chdr">
+              <div class="ctitle">&#127981; Bank Account Details</div>
+              <span id="bank-status-badge" class="badge bmuted" style="font-size:9px">Saved</span>
+            </div>
+            <div class="cbody">
+              <div class="alert alblue" style="margin-bottom:14px"><span>&#128276;</span><div>Any change to bank details will <strong>immediately notify the Accounts team</strong> and update the payroll system.</div></div>
+
+              <div class="frow c1"><div class="fld"><label>Bank Name</label><input id="pf-bank-name" placeholder="e.g. Emirates NBD, HDFC Bank, ADCB"></div></div>
+              <div class="frow">
+                <div class="fld"><label>Account Number</label><input id="pf-bank-acc" placeholder="Account number" type="text"></div>
+                <div class="fld"><label>IBAN / SWIFT Code</label><input id="pf-bank-iban" placeholder="AE xx xxxx xxxx xxxx xxxx xxx"></div>
+              </div>
+              <div class="frow c1"><div class="fld"><label>Account Holder Name</label><input id="pf-bank-holder" placeholder="Name as per bank records"></div></div>
+
+              <!-- Bank change warning -->
+              <div id="bank-change-warning" style="display:none;margin-top:8px;padding:10px 13px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;font-size:11px;color:#92400e;font-weight:600">
+                &#9888;&#65039; You have unsaved bank changes. Click <strong>Save All Changes</strong> to notify Accounts and update payroll.
+              </div>
+
+              <!-- Audit log toggle -->
+              <div style="margin-top:12px;border-top:1px solid var(--bord);padding-top:10px">
+                <div style="font-size:11px;font-weight:700;color:var(--mu);margin-bottom:8px;cursor:pointer" onclick="toggleAuditLog()">&#128203; Bank Change History <span id="audit-toggle-arrow">&#9660;</span></div>
+                <div id="audit-log-wrap" style="display:none">
+                  <table style="width:100%;border-collapse:collapse;font-size:11px">
+                    <thead><tr style="background:#f8f9fa"><th style="padding:6px 8px;text-align:left;border-bottom:1px solid var(--bord)">Date</th><th style="padding:6px 8px;text-align:left;border-bottom:1px solid var(--bord)">Changed By</th><th style="padding:6px 8px;text-align:left;border-bottom:1px solid var(--bord)">Bank</th><th style="padding:6px 8px;text-align:left;border-bottom:1px solid var(--bord)">Status</th></tr></thead>
+                    <tbody id="audit-log-body">
+                      <tr><td style="padding:6px 8px;color:var(--mu)" colspan="4">No previous changes recorded.</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Approval Status (shown when pending) -->
+      <div id="bank-approval-banner" style="display:none;max-width:860px;margin:0 auto 16px">
+        <div class="alert alwarn">
+          <span>&#9203;</span>
+          <div><strong>Bank update pending approval</strong> &mdash; Your bank account change has been submitted and is awaiting HR/Accounts approval. Salary will be paid to the new account once approved.</div>
+        </div>
+      </div>
     </div>
 
     <!-- REPORTS -->
@@ -1281,6 +1438,7 @@ var FULL_HR_NAV = [
   {id:"tax",        lbl:"Tax Management",     ico:"&#129534;"},
   {id:"payslips",   lbl:"Payslips",           ico:"&#128196;"},
   {sec:"System"},
+  {id:"profile",    lbl:"My Profile",         ico:"&#128100;"},
   {id:"users",      lbl:"User Management",    ico:"&#128273;"},
   {id:"checkin",    lbl:"GPS Check-In",       ico:"&#128205;"},
   {id:"admin",      lbl:"Admin Settings",     ico:"&#9881;"},
@@ -1299,6 +1457,7 @@ var MANAGER_NAV = [
   {id:"checkin",    lbl:"GPS Check-In",      ico:"&#128205;"},
   {sec:"My Info"},
   {id:"payslips",   lbl:"My Payslip",        ico:"&#128196;"},
+  {id:"profile",    lbl:"My Profile",        ico:"&#128100;"},
   {sec:"Reports"},
   {id:"reports",    lbl:"Reports",           ico:"&#128202;"}
 ];
@@ -1315,6 +1474,7 @@ var ROLE_CFG = {
       {id:"attendance", lbl:"My Attendance", ico:"&#128336;"},
       {id:"leave",      lbl:"Apply Leave",   ico:"&#128197;"},
       {id:"payslips",   lbl:"My Payslips",   ico:"&#128196;"},
+      {id:"profile",    lbl:"My Profile",    ico:"&#128100;"},
       {id:"checkin",    lbl:"GPS Check-In",  ico:"&#128205;"}
     ]
   },
@@ -1326,6 +1486,7 @@ var ROLE_CFG = {
       {id:"payroll",    lbl:"Payroll Review", ico:"&#128176;"},
       {id:"tax",        lbl:"Tax Management", ico:"&#129534;"},
       {id:"payslips",   lbl:"Payslips",       ico:"&#128196;"},
+      {id:"profile",    lbl:"My Profile",     ico:"&#128100;"},
       {sec:"Reports"},
       {id:"reports",    lbl:"Reports",        ico:"&#128202;"}
     ]
@@ -1865,19 +2026,16 @@ function safeRemove(key) {
 
 // ── MOBILE SIDEBAR ──
 function toggleMob() {
-  var sb   = document.getElementById("SB");
-  var ov   = document.getElementById("mob-overlay");
+  var sb  = document.getElementById("SB");
+  var ov  = document.getElementById("mob-overlay");
   var open = sb && sb.classList.contains("mob-open");
-  if (sb) {
-    sb.classList.toggle("mob-open", !open);
-    sb.classList.toggle("open", !open);
-  }
+  if (sb) sb.classList.toggle("mob-open", !open);
   if (ov) ov.classList.toggle("on", !open);
 }
 function closeMob() {
   var sb = document.getElementById("SB");
   var ov = document.getElementById("mob-overlay");
-  if (sb) { sb.classList.remove("mob-open"); sb.classList.remove("open"); }
+  if (sb) sb.classList.remove("mob-open");
   if (ov) ov.classList.remove("on");
 }
 
@@ -2252,7 +2410,8 @@ function goPage(id) {
     dash:"Dashboard", employees:"Employee Master", attendance:"Attendance",
     leave:"Leave Management", overtime:"Overtime", payroll:"Payroll Processing",
     tax:"Tax Management", payslips:"Payslips", reports:"Reports",
-    users:"User Management", checkin:"GPS Check-In", admin:"Admin Settings"
+    users:"User Management", checkin:"GPS Check-In", admin:"Admin Settings",
+    profile:"My Profile"
   };
   var t = document.getElementById("pg-title");
   if (t) t.textContent = titles[id] || id;
@@ -2260,6 +2419,7 @@ function goPage(id) {
   if (id === "users") renderUsers();
   if (id === "checkin") { setTimeout(function(){ initCiMap(); getGPS(); }, 200); }
   if (id === "payslips") { setTimeout(function(){ initPayslipPage(); }, 150); }
+  if (id === "profile")  { setTimeout(function(){ initProfilePage(); }, 100); }
   if (id === "admin" && adminMap) { setTimeout(function(){ adminMap.invalidateSize(); }, 150); }
   if (id === "admin") { setTimeout(renderDeviceApprovals, 400); }
   closeMob();
@@ -2599,343 +2759,500 @@ function showToast(msg, type) {
 
 
 <script>
-
 // ══════════════════════════════════════════════════════════════
-//  PAYSLIP ACCESS CONTROL
-//  superadmin + accountant  → see ALL employees
-//  hr                       → see ALL employees
-//  manager / employee       → see ONLY their own payslip
+//  EMPLOYEE PROFILE MODULE
 // ══════════════════════════════════════════════════════════════
 
-// Map login username → PAYSLIP_DATA key
+// In-memory profile store (keyed by username)
+var PROFILE_STORE = {};
+// Bank audit log (per user)
+var BANK_AUDIT    = {};
+// Track original bank values to detect changes
+var _origBank     = {};
+
+// ── Initialize profile page ───────────────────────────────────
+function initProfilePage() {
+  if (!CU) return;
+  var uname = getCurrentUsername();
+  var saved = PROFILE_STORE[uname] || {};
+
+  // Pre-fill from USERS data
+  setVal('pf-name',        saved.name       || CU.name  || '');
+  setVal('pf-phone',       saved.phone      || '');
+  setVal('pf-address',     saved.address    || '');
+  setVal('pf-emergency',   saved.emergency  || '');
+  setVal('pf-dob',         saved.dob        || '');
+  setVal('pf-marital',     saved.marital    || '');
+  setVal('pf-blood',       saved.blood      || '');
+  setVal('pf-nationality', saved.nationality|| '');
+  setVal('pf-id-type',     saved.idType     || '');
+  setVal('pf-id-number',   saved.idNumber   || '');
+  setVal('pf-id-expiry',   saved.idExpiry   || '');
+
+  // Bank details — pre-fill from PAYSLIP_DATA + saved
+  var psKey = USER_PAYSLIP_KEY ? USER_PAYSLIP_KEY[uname] : null;
+  var psEmp = psKey && PAYSLIP_DATA ? PAYSLIP_DATA[psKey] : null;
+  var bankName = saved.bankName || (psEmp ? psEmp.bank    : '') || '';
+  var bankAcc  = saved.bankAcc  || (psEmp ? psEmp.bankAcc : '') || '';
+  var bankIban = saved.bankIban || '';
+  var bankHolder = saved.bankHolder || CU.name || '';
+
+  setVal('pf-bank-name',   bankName);
+  setVal('pf-bank-acc',    bankAcc);
+  setVal('pf-bank-iban',   bankIban);
+  setVal('pf-bank-holder', bankHolder);
+
+  // Store originals to detect changes
+  _origBank[uname] = { bankName:bankName, bankAcc:bankAcc, bankIban:bankIban, bankHolder:bankHolder };
+
+  // Watch bank fields for changes
+  ['pf-bank-name','pf-bank-acc','pf-bank-iban','pf-bank-holder'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('input', function(){ checkBankChanged(uname); });
+  });
+
+  // Restore photo
+  if (saved.photoSrc) {
+    var img = document.getElementById('profile-photo-img');
+    var ph  = document.getElementById('profile-photo-placeholder');
+    if (img) { img.src = saved.photoSrc; img.style.display = 'block'; }
+    if (ph)  ph.style.display = 'none';
+  }
+
+  // Restore ID doc
+  if (saved.idDocName) {
+    var preview = document.getElementById('id-doc-preview');
+    var name    = document.getElementById('id-doc-name');
+    if (preview) preview.style.display = 'block';
+    if (name)    name.textContent = saved.idDocName;
+  }
+
+  // Render audit log
+  renderAuditLog(uname);
+
+  // Reset notifications
+  var notify = document.getElementById('profile-notify');
+  if (notify) notify.style.display = 'none';
+  var warn = document.getElementById('bank-change-warning');
+  if (warn) warn.style.display = 'none';
+  var badge = document.getElementById('bank-status-badge');
+  if (badge) { badge.className = 'badge bmuted'; badge.textContent = 'Saved'; }
+}
+
+function setVal(id, val) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  if (el.tagName === 'SELECT') el.value = val;
+  else el.value = val;
+}
+function getVal(id) {
+  var el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+function getCurrentUsername() {
+  if (!CU || !USERS) return '';
+  var found = '';
+  Object.keys(USERS).forEach(function(k){ if(USERS[k]===CU) found=k; });
+  return found;
+}
+
+// ── Detect bank changes ───────────────────────────────────────
+function checkBankChanged(uname) {
+  var orig = _origBank[uname] || {};
+  var changed = (
+    getVal('pf-bank-name')   !== orig.bankName   ||
+    getVal('pf-bank-acc')    !== orig.bankAcc     ||
+    getVal('pf-bank-iban')   !== orig.bankIban    ||
+    getVal('pf-bank-holder') !== orig.bankHolder
+  );
+  var warn  = document.getElementById('bank-change-warning');
+  var badge = document.getElementById('bank-status-badge');
+  if (warn)  warn.style.display  = changed ? 'block' : 'none';
+  if (badge) {
+    badge.className   = changed ? 'badge bwarn' : 'badge bmuted';
+    badge.textContent = changed ? 'Unsaved Changes' : 'Saved';
+  }
+}
+
+// ── Save profile ──────────────────────────────────────────────
+function saveProfile() {
+  if (!CU) return;
+  var uname = getCurrentUsername();
+
+  // Validate mandatory ID
+  var idType = getVal('pf-id-type');
+  var idNum  = getVal('pf-id-number');
+  if (!idType || !idNum) {
+    showToast('Identity verification is mandatory! Select ID type and enter ID number.', 'danger');
+    return;
+  }
+
+  var orig    = _origBank[uname] || {};
+  var newBank = {
+    bankName:   getVal('pf-bank-name'),
+    bankAcc:    getVal('pf-bank-acc'),
+    bankIban:   getVal('pf-bank-iban'),
+    bankHolder: getVal('pf-bank-holder')
+  };
+  var bankChanged = (
+    newBank.bankName   !== orig.bankName   ||
+    newBank.bankAcc    !== orig.bankAcc    ||
+    newBank.bankIban   !== orig.bankIban   ||
+    newBank.bankHolder !== orig.bankHolder
+  );
+
+  // Save all profile data
+  PROFILE_STORE[uname] = {
+    name:        getVal('pf-name'),
+    phone:       getVal('pf-phone'),
+    address:     getVal('pf-address'),
+    emergency:   getVal('pf-emergency'),
+    dob:         getVal('pf-dob'),
+    marital:     getVal('pf-marital'),
+    blood:       getVal('pf-blood'),
+    nationality: getVal('pf-nationality'),
+    idType:      idType,
+    idNumber:    idNum,
+    idExpiry:    getVal('pf-id-expiry'),
+    idDocName:   PROFILE_STORE[uname] ? PROFILE_STORE[uname].idDocName : '',
+    photoSrc:    PROFILE_STORE[uname] ? PROFILE_STORE[uname].photoSrc  : '',
+    bankName:    newBank.bankName,
+    bankAcc:     newBank.bankAcc,
+    bankIban:    newBank.bankIban,
+    bankHolder:  newBank.bankHolder
+  };
+
+  // If bank changed — trigger notifications + audit
+  if (bankChanged) {
+    // Add to audit log
+    if (!BANK_AUDIT[uname]) BANK_AUDIT[uname] = [];
+    BANK_AUDIT[uname].unshift({
+      date:    new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}),
+      time:    new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}),
+      by:      CU.name,
+      bank:    newBank.bankName,
+      acc:     newBank.bankAcc,
+      status:  'Pending Approval'
+    });
+
+    // Update orig
+    _origBank[uname] = Object.assign({}, newBank);
+
+    // Update PAYSLIP_DATA bank info immediately
+    var psKey = USER_PAYSLIP_KEY ? USER_PAYSLIP_KEY[uname] : null;
+    if (psKey && PAYSLIP_DATA && PAYSLIP_DATA[psKey]) {
+      PAYSLIP_DATA[psKey].bank    = newBank.bankName;
+      PAYSLIP_DATA[psKey].bankAcc = newBank.bankAcc;
+    }
+
+    // Show notifications
+    sendBankNotifications(uname, newBank);
+    renderAuditLog(uname);
+
+    // Show approval banner
+    var banner = document.getElementById('bank-approval-banner');
+    if (banner) banner.style.display = 'block';
+    setTimeout(function(){ if(banner) banner.style.display='none'; }, 8000);
+  }
+
+  // Update badge
+  var badge = document.getElementById('bank-status-badge');
+  var warn  = document.getElementById('bank-change-warning');
+  if (badge) { badge.className = 'badge bok'; badge.textContent = 'Saved'; }
+  if (warn)  warn.style.display = 'none';
+
+  showToast('Profile saved successfully! ' + (bankChanged ? 'Bank update notified to Accounts.' : ''), 'ok');
+}
+
+// ── Bank notifications ────────────────────────────────────────
+function sendBankNotifications(uname, newBank) {
+  // Notify accountant portal
+  var msg = CU.name + ' has updated bank details. New bank: ' + newBank.bankName + ' | Acc: ' + newBank.bankAcc;
+
+  // Show in-page notification
+  var notify = document.getElementById('profile-notify');
+  var notifyMsg = document.getElementById('profile-notify-msg');
+  if (notify && notifyMsg) {
+    notifyMsg.innerHTML =
+      '<strong>&#128276; Bank update sent!</strong> Accounts team notified. ' +
+      'New bank: <strong>' + newBank.bankName + '</strong> | ' +
+      'Account: <strong>' + maskAccount(newBank.bankAcc) + '</strong> &mdash; ' +
+      'Pending approval for payroll update.';
+    notify.style.display = 'flex';
+    setTimeout(function(){ notify.style.display='none'; }, 10000);
+  }
+
+  // Toast notification
+  showToast('&#128276; Bank update notified to Accounts & HR!', 'ok');
+
+  // Simulate sending to accountant (in production: API call / email)
+  console.log('[BANK UPDATE NOTIFICATION]', {
+    employee:  CU.name,
+    empId:     CU.id || '',
+    newBank:   newBank,
+    timestamp: new Date().toISOString(),
+    notifiedTo: ['accountant@asterwix.com', 'hr@asterwix.com']
+  });
+
+  // Save pending notification for accountant dashboard
+  if (!window.PENDING_BANK_APPROVALS) window.PENDING_BANK_APPROVALS = [];
+  window.PENDING_BANK_APPROVALS.push({
+    empName:   CU.name,
+    empId:     CU.id || '',
+    bank:      newBank.bankName,
+    acc:       newBank.bankAcc,
+    iban:      newBank.bankIban,
+    holder:    newBank.bankHolder,
+    date:      new Date().toISOString(),
+    status:    'Pending'
+  });
+}
+
+function maskAccount(acc) {
+  if (!acc || acc.length < 4) return acc;
+  return '****' + acc.slice(-4);
+}
+
+// ── Audit log ─────────────────────────────────────────────────
+function renderAuditLog(uname) {
+  var tbody = document.getElementById('audit-log-body');
+  if (!tbody) return;
+  var logs = BANK_AUDIT[uname] || [];
+  if (logs.length === 0) {
+    tbody.innerHTML = '<tr><td style="padding:6px 8px;color:var(--mu)" colspan="4">No previous changes recorded.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = logs.map(function(l){
+    return '<tr>' +
+      '<td style="padding:6px 8px">' + l.date + ' ' + (l.time||'') + '</td>' +
+      '<td style="padding:6px 8px">' + l.by + '</td>' +
+      '<td style="padding:6px 8px">' + l.bank + ' &mdash; ' + maskAccount(l.acc) + '</td>' +
+      '<td style="padding:6px 8px"><span class="badge bwarn" style="font-size:9px">' + l.status + '</span></td>' +
+    '</tr>';
+  }).join('');
+}
+
+function toggleAuditLog() {
+  var wrap  = document.getElementById('audit-log-wrap');
+  var arrow = document.getElementById('audit-toggle-arrow');
+  if (!wrap) return;
+  var open = wrap.style.display !== 'none';
+  wrap.style.display  = open ? 'none' : 'block';
+  if (arrow) arrow.textContent = open ? '\u25bc' : '\u25b2';
+}
+
+// ── Photo upload ──────────────────────────────────────────────
+function handlePhotoUpload(input) {
+  if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
+  if (file.size > 2 * 1024 * 1024) {
+    showToast('Photo too large. Max 2MB.', 'danger'); return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var img = document.getElementById('profile-photo-img');
+    var ph  = document.getElementById('profile-photo-placeholder');
+    if (img) { img.src = e.target.result; img.style.display = 'block'; }
+    if (ph)  ph.style.display = 'none';
+    // Save in store
+    var uname = getCurrentUsername();
+    if (!PROFILE_STORE[uname]) PROFILE_STORE[uname] = {};
+    PROFILE_STORE[uname].photoSrc = e.target.result;
+    showToast('Photo uploaded \u2713', 'ok');
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── ID document upload ────────────────────────────────────────
+function handleIDUpload(input) {
+  if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
+  if (file.size > 5 * 1024 * 1024) {
+    showToast('Document too large. Max 5MB.', 'danger'); return;
+  }
+  var preview = document.getElementById('id-doc-preview');
+  var name    = document.getElementById('id-doc-name');
+  if (preview) preview.style.display = 'block';
+  if (name)    name.textContent = file.name + ' (' + (file.size/1024).toFixed(0) + ' KB)';
+  var uname = getCurrentUsername();
+  if (!PROFILE_STORE[uname]) PROFILE_STORE[uname] = {};
+  PROFILE_STORE[uname].idDocName = file.name;
+  showToast('ID document uploaded \u2713', 'ok');
+}
+
+function handleIDDrop(e) {
+  e.preventDefault();
+  var fakeInput = { files: e.dataTransfer.files };
+  handleIDUpload(fakeInput);
+  document.getElementById('id-upload-zone').style.borderColor = '';
+}
+
+function removeIDDoc() {
+  var preview = document.getElementById('id-doc-preview');
+  if (preview) preview.style.display = 'none';
+  var uname = getCurrentUsername();
+  if (PROFILE_STORE[uname]) PROFILE_STORE[uname].idDocName = '';
+  document.getElementById('id-doc-upload').value = '';
+  showToast('Document removed.', '');
+}
+
+// ══ PAYSLIP PAGE FUNCTIONS ══════════════════════════════════
+
 var USER_PAYSLIP_KEY = {
-  'superadmin': null,       // admin — no personal payslip
-  'hr.admin':   null,       // HR admin — no personal payslip
-  'accountant': null,       // accountant — no personal payslip
-  'a.mansouri': 'a.mansouri',
-  'sara.j':     'sara.j',
-  'ravi.p':     'ravi.p',
-  'fatima.h':   'fatima.h',
-  'james.o':    'james.o'
+  'superadmin': null, 'hr.admin': null, 'accountant': null,
+  'a.mansouri': 'a.mansouri', 'sara.j': 'sara.j',
+  'ravi.p': 'ravi.p', 'fatima.h': 'fatima.h', 'james.o': 'james.o'
 };
 
 var ALL_EMPLOYEES_FOR_PAYSLIP = [
-  { key:'a.mansouri', label:'Ahmed Al Mansouri (AWX-001) — AED' },
-  { key:'sara.j',     label:'Sara Johnson (AWX-002) — AED' },
-  { key:'ravi.p',     label:'Ravi Patel (AWX-003) — INR ₹' },
-  { key:'fatima.h',   label:'Fatima Hassan (AWX-004) — AED' },
-  { key:'james.o',    label:'James Okafor (AWX-005) — INR ₹' }
+  {key:'a.mansouri', label:'Ahmed Al Mansouri (AWX-001) \u2014 AED'},
+  {key:'sara.j',     label:'Sara Johnson (AWX-002) \u2014 AED'},
+  {key:'ravi.p',     label:'Ravi Patel (AWX-003) \u2014 INR \u20b9'},
+  {key:'fatima.h',   label:'Fatima Hassan (AWX-004) \u2014 AED'},
+  {key:'james.o',    label:'James Okafor (AWX-005) \u2014 INR \u20b9'}
 ];
 
 function initPayslipPage() {
   if (!CU) return;
-  var role    = CU.role;
-  var wrap    = document.getElementById('ps-selector-wrap');
-  var output  = document.getElementById('ps-output');
+  var role  = CU.role;
+  var wrap  = document.getElementById('ps-selector-wrap');
+  var output= document.getElementById('ps-output');
   if (!wrap) return;
-
-  // Roles that can see ALL payslips
-  var canSeeAll = (role === 'superadmin' || role === 'accountant' || role === 'hr');
+  var canSeeAll = (role==='superadmin'||role==='accountant'||role==='hr');
 
   if (canSeeAll) {
-    // Build full selector
     var opts = ALL_EMPLOYEES_FOR_PAYSLIP.map(function(e){
       return '<option value="'+e.key+'">'+e.label+'</option>';
     }).join('');
-
     wrap.innerHTML =
-      '<div class="card" style="margin-bottom:16px">' +
-        '<div class="chdr"><div class="ctitle">Select Payslip</div>' +
-        '<span class="badge bok" style="font-size:9px">&#128274; Full Access</span></div>' +
-        '<div class="cbody" style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">' +
-          '<div class="fld" style="margin:0;flex:1;min-width:180px"><label>Employee</label>' +
-            '<select id="ps-emp-select">'+opts+'</select>' +
-          '</div>' +
-          '<div class="fld" style="margin:0;min-width:160px"><label>Month</label>' +
-            '<select id="ps-month-select">' +
-              '<option value="March 2026" selected>March 2026</option>' +
-              '<option value="February 2026">February 2026</option>' +
-              '<option value="January 2026">January 2026</option>' +
-            '</select>' +
-          '</div>' +
-          '<button class="btn bdark" onclick="renderPayslip()">Load Payslip</button>' +
-        '</div>' +
-      '</div>';
-
-    if (output) output.innerHTML =
-      '<div style="text-align:center;padding:40px;color:var(--mu);font-size:13px;">' +
-      'Select an employee and click <strong>Load Payslip</strong></div>';
-
+      '<div class="card" style="margin-bottom:16px"><div class="chdr"><div class="ctitle">Select Payslip</div>'+
+      '<span class="badge bok" style="font-size:9px">&#128274; Full Access</span></div>'+
+      '<div class="cbody" style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">'+
+        '<div class="fld" style="margin:0;flex:1;min-width:180px"><label>Employee</label>'+
+          '<select id="ps-emp-select">'+opts+'</select></div>'+
+        '<div class="fld" style="margin:0;min-width:160px"><label>Month</label>'+
+          '<select id="ps-month-select">'+
+            '<option value="March 2026" selected>March 2026</option>'+
+            '<option value="February 2026">February 2026</option>'+
+            '<option value="January 2026">January 2026</option>'+
+          '</select></div>'+
+        '<button class="btn bdark" onclick="renderPayslip()">Load Payslip</button>'+
+      '</div></div>';
+    if (output) output.innerHTML = '<div style="text-align:center;padding:40px;color:var(--mu);font-size:13px;">Select an employee and click <strong>Load Payslip</strong></div>';
   } else {
-    // Employee / Manager — find their own payslip key
-    var uname = null;
-    Object.keys(USERS).forEach(function(k){ if(USERS[k] === CU) uname = k; });
-    var myKey = USER_PAYSLIP_KEY[uname] || null;
-
-    if (!myKey || !PAYSLIP_DATA[myKey]) {
-      wrap.innerHTML =
-        '<div class="alert alwarn"><span>&#9888;</span>' +
-        '<div>No payslip record found for your account. Contact HR Admin.</div></div>';
+    var uname = getCurrentUsername();
+    var myKey = USER_PAYSLIP_KEY[uname]||null;
+    if (!myKey||!PAYSLIP_DATA||!PAYSLIP_DATA[myKey]) {
+      wrap.innerHTML = '<div class="alert alwarn"><span>&#9888;</span><div>No payslip record found. Contact HR Admin.</div></div>';
       return;
     }
-
     var emp = PAYSLIP_DATA[myKey];
-    var curSym = emp.currency === 'INR' ? '&#8377; INR' : 'AED';
-
+    var curSym = emp.currency==='INR'?'&#8377; INR':'AED';
     wrap.innerHTML =
-      '<div class="card" style="margin-bottom:16px">' +
-        '<div class="chdr"><div class="ctitle">My Payslip</div>' +
-        '<span class="badge bblue" style="font-size:9px">&#128100; Personal Only</span></div>' +
-        '<div class="cbody" style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">' +
-          '<div class="fld" style="margin:0;flex:1"><label>Employee</label>' +
-            '<input readonly value="'+emp.name+' ('+emp.code+') — '+curSym+'" ' +
-            'style="background:#f0f0f0;color:var(--mu);border:1.5px solid var(--bord);border-radius:8px;padding:9px 12px;font-size:13px;width:100%">' +
-            '<input type="hidden" id="ps-emp-select" value="'+myKey+'">' +
-          '</div>' +
-          '<div class="fld" style="margin:0;min-width:160px"><label>Month</label>' +
-            '<select id="ps-month-select">' +
-              '<option value="March 2026" selected>March 2026</option>' +
-              '<option value="February 2026">February 2026</option>' +
-              '<option value="January 2026">January 2026</option>' +
-            '</select>' +
-          '</div>' +
-          '<button class="btn bdark" onclick="renderPayslip()">View My Payslip</button>' +
-        '</div>' +
-      '</div>' +
-      '<div class="alert alblue" style="max-width:860px;margin:0 auto 12px">' +
-        '<span>&#128274;</span>' +
-        '<div>You can only view <strong>your own payslip</strong>. Contact HR Admin for any queries.</div>' +
-      '</div>';
-
-    // Auto-load current month payslip
-    if (output) output.innerHTML =
-      '<div style="text-align:center;padding:30px;color:var(--mu);font-size:13px;">' +
-      'Select a month and click <strong>View My Payslip</strong></div>';
+      '<div class="card" style="margin-bottom:16px"><div class="chdr"><div class="ctitle">My Payslip</div>'+
+      '<span class="badge bblue" style="font-size:9px">&#128100; Personal Only</span></div>'+
+      '<div class="cbody" style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">'+
+        '<div class="fld" style="margin:0;flex:1"><label>Employee</label>'+
+          '<input readonly value="'+emp.name+' ('+emp.code+') \u2014 '+curSym+'" style="background:#f0f0f0;color:var(--mu);border:1.5px solid var(--bord);border-radius:8px;padding:9px 12px;font-size:13px;width:100%">'+
+          '<input type="hidden" id="ps-emp-select" value="'+myKey+'"></div>'+
+        '<div class="fld" style="margin:0;min-width:160px"><label>Month</label>'+
+          '<select id="ps-month-select">'+
+            '<option value="March 2026" selected>March 2026</option>'+
+            '<option value="February 2026">February 2026</option>'+
+            '<option value="January 2026">January 2026</option>'+
+          '</select></div>'+
+        '<button class="btn bdark" onclick="renderPayslip()">View My Payslip</button>'+
+      '</div></div>'+
+      '<div class="alert alblue" style="max-width:860px;margin:0 auto 12px"><span>&#128274;</span>'+
+      '<div>You can only view <strong>your own payslip</strong>.</div></div>';
   }
 }
 
-// ══ PAYSLIP DATA ══
 var PAYSLIP_DATA = {
-  'a.mansouri': {
-    name:'Ahmed Al Mansouri', code:'AWX-001', designation:'BIM Lead',
-    joinDate:'01 Jan 2022', bank:'Emirates NBD', bankAcc:'AE123456789012345678901',
-    currency:'AED', location:'UAE', flag:'🇦🇪',
-    basic:12000, hra:4000, transport:2000, otHours:3.5, otRate:60, taxPct:3,
-    months:{
-      'March 2026':    {paidDays:18, workDays:20, lop:0,   backPay:0,  lopDates:'NA', loprPos:'NA', loprNeg:'NA'},
-      'February 2026': {paidDays:25.5,workDays:28,lop:2.5, backPay:-1, lopDates:'05 Feb 2026, 07 Feb 2026, 12 Feb 2026', loprPos:'NA', loprNeg:'28 Jan 2026, 31 Jan 2026'},
-      'January 2026':  {paidDays:22, workDays:23, lop:1,   backPay:0,  lopDates:'15 Jan 2026', loprPos:'NA', loprNeg:'NA'}
-    }
-  },
-  'sara.j': {
-    name:'Sara Johnson', code:'AWX-002', designation:'Senior Architect',
-    joinDate:'01 Mar 2021', bank:'ADCB', bankAcc:'AE260030014125260920001',
-    currency:'AED', location:'UAE', flag:'🇦🇪',
-    basic:9500, hra:3325, transport:1900, otHours:3.5, otRate:55, taxPct:0,
-    months:{
-      'March 2026':    {paidDays:16, workDays:20, lop:2, backPay:0, lopDates:'12 Mar 2026, 13 Mar 2026', loprPos:'NA', loprNeg:'NA'},
-      'February 2026': {paidDays:24, workDays:28, lop:2, backPay:0, lopDates:'20 Feb 2026, 21 Feb 2026', loprPos:'NA', loprNeg:'NA'},
-      'January 2026':  {paidDays:23, workDays:23, lop:0, backPay:0, lopDates:'NA', loprPos:'NA', loprNeg:'NA'}
-    }
-  },
-  'ravi.p': {
-    name:'Ravi Patel', code:'AWX-003', designation:'MEP Engineer',
-    joinDate:'01 Jun 2022', bank:'HDFC Bank', bankAcc:'HDFC0001234567890',
-    currency:'INR', location:'India', flag:'🇮🇳',
-    basic:45000, hra:18000, transport:8500, otHours:6.5, otRate:250, taxPct:5,
-    months:{
-      'March 2026':    {paidDays:17, workDays:20, lop:1, backPay:0,  lopDates:'10 Mar 2026', loprPos:'NA', loprNeg:'NA'},
-      'February 2026': {paidDays:26, workDays:28, lop:2, backPay:0,  lopDates:'06 Feb 2026, 07 Feb 2026', loprPos:'NA', loprNeg:'NA'},
-      'January 2026':  {paidDays:23, workDays:23, lop:0, backPay:0,  lopDates:'NA', loprPos:'NA', loprNeg:'NA'}
-    }
-  },
-  'fatima.h': {
-    name:'Fatima Hassan', code:'AWX-004', designation:'HR Executive',
-    joinDate:'01 Sep 2020', bank:'Dubai Islamic Bank', bankAcc:'AE390340000123456789012',
-    currency:'AED', location:'UAE', flag:'🇦🇪',
-    basic:7000, hra:2450, transport:1400, otHours:0, otRate:40, taxPct:2,
-    months:{
-      'March 2026':    {paidDays:17, workDays:20, lop:0, backPay:0, lopDates:'NA', loprPos:'NA', loprNeg:'NA'},
-      'February 2026': {paidDays:28, workDays:28, lop:0, backPay:0, lopDates:'NA', loprPos:'NA', loprNeg:'NA'},
-      'January 2026':  {paidDays:23, workDays:23, lop:0, backPay:0, lopDates:'NA', loprPos:'NA', loprNeg:'NA'}
-    }
-  },
-  'james.o': {
-    name:'James Okafor', code:'AWX-005', designation:'BIM Coordinator',
-    joinDate:'01 Nov 2023', bank:'SBI', bankAcc:'SBI0009876543210',
-    currency:'INR', location:'India', flag:'🇮🇳',
-    basic:32000, hra:12800, transport:6400, otHours:0, otRate:180, taxPct:4,
-    months:{
-      'March 2026':    {paidDays:14, workDays:20, lop:3, backPay:0, lopDates:'02 Mar, 03 Mar, 04 Mar 2026', loprPos:'NA', loprNeg:'NA'},
-      'February 2026': {paidDays:24, workDays:28, lop:2, backPay:0, lopDates:'10 Feb 2026, 11 Feb 2026', loprPos:'NA', loprNeg:'NA'},
-      'January 2026':  {paidDays:21, workDays:23, lop:0, backPay:0, lopDates:'NA', loprPos:'NA', loprNeg:'NA'}
-    }
-  }
+  'a.mansouri':{name:'Ahmed Al Mansouri',code:'AWX-001',designation:'BIM Lead',joinDate:'01 Jan 2022',bank:'Emirates NBD',bankAcc:'AE123456789012345678901',currency:'AED',location:'UAE',flag:'\u{1F1E6}\u{1F1EA}',basic:12000,hra:4000,transport:2000,otHours:3.5,otRate:60,taxPct:3,months:{'March 2026':{paidDays:18,workDays:20,lop:0,backPay:0,lopDates:'NA',loprPos:'NA',loprNeg:'NA'},'February 2026':{paidDays:25.5,workDays:28,lop:2.5,backPay:-1,lopDates:'05 Feb,07 Feb,12 Feb,13 Feb 2026',loprPos:'NA',loprNeg:'28 Jan,31 Jan 2026'},'January 2026':{paidDays:22,workDays:23,lop:1,backPay:0,lopDates:'15 Jan 2026',loprPos:'NA',loprNeg:'NA'}}},
+  'sara.j':{name:'Sara Johnson',code:'AWX-002',designation:'Senior Architect',joinDate:'01 Mar 2021',bank:'ADCB',bankAcc:'AE260030014125260920001',currency:'AED',location:'UAE',flag:'\u{1F1E6}\u{1F1EA}',basic:9500,hra:3325,transport:1900,otHours:3.5,otRate:55,taxPct:0,months:{'March 2026':{paidDays:16,workDays:20,lop:2,backPay:0,lopDates:'12 Mar,13 Mar 2026',loprPos:'NA',loprNeg:'NA'},'February 2026':{paidDays:24,workDays:28,lop:2,backPay:0,lopDates:'20 Feb,21 Feb 2026',loprPos:'NA',loprNeg:'NA'},'January 2026':{paidDays:23,workDays:23,lop:0,backPay:0,lopDates:'NA',loprPos:'NA',loprNeg:'NA'}}},
+  'ravi.p':{name:'Ravi Patel',code:'AWX-003',designation:'MEP Engineer',joinDate:'01 Jun 2022',bank:'HDFC Bank',bankAcc:'HDFC0001234567890',currency:'INR',location:'India',flag:'\u{1F1EE}\u{1F1F3}',basic:45000,hra:18000,transport:8500,otHours:6.5,otRate:250,taxPct:5,months:{'March 2026':{paidDays:17,workDays:20,lop:1,backPay:0,lopDates:'10 Mar 2026',loprPos:'NA',loprNeg:'NA'},'February 2026':{paidDays:26,workDays:28,lop:2,backPay:0,lopDates:'06 Feb,07 Feb 2026',loprPos:'NA',loprNeg:'NA'},'January 2026':{paidDays:23,workDays:23,lop:0,backPay:0,lopDates:'NA',loprPos:'NA',loprNeg:'NA'}}},
+  'fatima.h':{name:'Fatima Hassan',code:'AWX-004',designation:'HR Executive',joinDate:'01 Sep 2020',bank:'Dubai Islamic Bank',bankAcc:'AE390340000123456789012',currency:'AED',location:'UAE',flag:'\u{1F1E6}\u{1F1EA}',basic:7000,hra:2450,transport:1400,otHours:0,otRate:40,taxPct:2,months:{'March 2026':{paidDays:17,workDays:20,lop:0,backPay:0,lopDates:'NA',loprPos:'NA',loprNeg:'NA'},'February 2026':{paidDays:28,workDays:28,lop:0,backPay:0,lopDates:'NA',loprPos:'NA',loprNeg:'NA'},'January 2026':{paidDays:23,workDays:23,lop:0,backPay:0,lopDates:'NA',loprPos:'NA',loprNeg:'NA'}}},
+  'james.o':{name:'James Okafor',code:'AWX-005',designation:'BIM Coordinator',joinDate:'01 Nov 2023',bank:'SBI',bankAcc:'SBI0009876543210',currency:'INR',location:'India',flag:'\u{1F1EE}\u{1F1F3}',basic:32000,hra:12800,transport:6400,otHours:0,otRate:180,taxPct:4,months:{'March 2026':{paidDays:14,workDays:20,lop:3,backPay:0,lopDates:'02 Mar,03 Mar,04 Mar 2026',loprPos:'NA',loprNeg:'NA'},'February 2026':{paidDays:24,workDays:28,lop:2,backPay:0,lopDates:'10 Feb,11 Feb 2026',loprPos:'NA',loprNeg:'NA'},'January 2026':{paidDays:21,workDays:23,lop:0,backPay:0,lopDates:'NA',loprPos:'NA',loprNeg:'NA'}}}
 };
 
-function numToWordsCore(n) {
-  var ones=['','ONE','TWO','THREE','FOUR','FIVE','SIX','SEVEN','EIGHT','NINE','TEN','ELEVEN','TWELVE','THIRTEEN','FOURTEEN','FIFTEEN','SIXTEEN','SEVENTEEN','EIGHTEEN','NINETEEN'];
-  var tens=['','','TWENTY','THIRTY','FORTY','FIFTY','SIXTY','SEVENTY','EIGHTY','NINETY'];
-  if(n===0) return 'ZERO';
-  if(n<20) return ones[n];
-  if(n<100) return tens[Math.floor(n/10)]+(n%10?' '+ones[n%10]:'');
-  if(n<1000) return ones[Math.floor(n/100)]+' HUNDRED'+(n%100?' AND '+numToWordsCore(n%100):'');
-  if(n<100000) return numToWordsCore(Math.floor(n/1000))+' THOUSAND'+(n%1000?' '+numToWordsCore(n%1000):'');
-  if(n<10000000) return numToWordsCore(Math.floor(n/100000))+' LAKH'+(n%100000?' '+numToWordsCore(n%100000):'');
-  return numToWordsCore(Math.floor(n/10000000))+' CRORE'+(n%10000000?' '+numToWordsCore(n%10000000):'');
-}
-function numToWords(n,cur){ return numToWordsCore(Math.floor(n))+(cur==='INR'?' RUPEES ONLY':' DIRHAM ONLY'); }
-
-function fmtMoney(n,cur){
-  var sym=cur==='INR'?'\u20b9 ':'AED ';
-  return sym+parseFloat(n).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
-}
+function numToWordsCore(n){var ones=['','ONE','TWO','THREE','FOUR','FIVE','SIX','SEVEN','EIGHT','NINE','TEN','ELEVEN','TWELVE','THIRTEEN','FOURTEEN','FIFTEEN','SIXTEEN','SEVENTEEN','EIGHTEEN','NINETEEN'];var tens=['','','TWENTY','THIRTY','FORTY','FIFTY','SIXTY','SEVENTY','EIGHTY','NINETY'];if(n===0)return'ZERO';if(n<20)return ones[n];if(n<100)return tens[Math.floor(n/10)]+(n%10?' '+ones[n%10]:'');if(n<1000)return ones[Math.floor(n/100)]+' HUNDRED'+(n%100?' AND '+numToWordsCore(n%100):'');if(n<100000)return numToWordsCore(Math.floor(n/1000))+' THOUSAND'+(n%1000?' '+numToWordsCore(n%1000):'');if(n<10000000)return numToWordsCore(Math.floor(n/100000))+' LAKH'+(n%100000?' '+numToWordsCore(n%100000):'');return numToWordsCore(Math.floor(n/10000000))+' CRORE'+(n%10000000?' '+numToWordsCore(n%10000000):'');}
+function numToWords(n,cur){return numToWordsCore(Math.floor(n))+(cur==='INR'?' RUPEES ONLY':' DIRHAM ONLY');}
+function fmtMoney(n,cur){var sym=cur==='INR'?'\u20b9 ':'AED ';return sym+parseFloat(n).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});}
 
 function renderPayslip(){
-  var empKey = document.getElementById('ps-emp-select').value;
-  var month  = document.getElementById('ps-month-select').value;
-  var emp    = PAYSLIP_DATA[empKey];
-  if(!emp){ showToast('Employee not found','danger'); return; }
+  var empKey=document.getElementById('ps-emp-select').value;
+  var month=document.getElementById('ps-month-select').value;
+  var emp=PAYSLIP_DATA[empKey];
+  if(!emp){showToast('Employee not found','danger');return;}
+  var mdata=emp.months[month]||emp.months['March 2026'];
+  var cur=emp.currency,sym=cur==='INR'?'\u20b9':'AED';
+  var curBadge=cur==='INR'?'<span class="ps-currency-badge">&#127470;&#127475; INR \u20b9</span>':'<span class="ps-currency-badge">&#127462;&#127466; AED</span>';
+  var paidDays=mdata.paidDays||0,workDays=mdata.workDays||20,lop=mdata.lop||0,backPay=mdata.backPay||0;
+  var totalDays=paidDays+Math.abs(backPay);
+  var lopDates=mdata.lopDates||'NA',loprPos=mdata.loprPos||'NA',loprNeg=mdata.loprNeg||'NA';
+  var earnedBasic=parseFloat(((emp.basic/workDays)*paidDays).toFixed(2));
+  var earnedHRA=parseFloat(((emp.hra/workDays)*paidDays).toFixed(2));
+  var earnedTA=parseFloat(((emp.transport/workDays)*paidDays).toFixed(2));
+  var actualTotal=emp.basic+emp.hra+emp.transport;
+  var otPay=parseFloat(((emp.otHours||0)*(emp.otRate||0)).toFixed(2));
+  var earnedTotal=parseFloat((earnedBasic+earnedHRA+earnedTA).toFixed(2));
+  var grossNet=earnedTotal+otPay;
+  var taxAmt=emp.taxPct>0?parseFloat(((grossNet*emp.taxPct)/100).toFixed(2)):0;
+  var netExact=grossNet-taxAmt;
+  var netRounded=Math.floor(netExact);
+  var roundDiff=parseFloat((netExact-netRounded).toFixed(2));
+  var totalDed=parseFloat((taxAmt+roundDiff).toFixed(2));
+  var netSalary=netRounded;
+  // Use updated bank details if available
+  var uname=getCurrentUsername();
+  var saved=PROFILE_STORE[uname]||{};
+  var bankName=saved.bankName||emp.bank;
+  var bankAcc=saved.bankAcc||emp.bankAcc;
 
-  var mdata    = emp.months[month] || emp.months['March 2026'];
-  var cur      = emp.currency;
-  var sym      = cur==='INR'?'\u20b9':'AED';
-  var curBadge = cur==='INR'
-    ? '<span class="ps-currency-badge">&#127470;&#127475; INR \u20b9</span>'
-    : '<span class="ps-currency-badge">&#127462;&#127466; AED</span>';
-
-  var paidDays = mdata.paidDays||0;
-  var workDays = mdata.workDays||20;
-  var lop      = mdata.lop||0;
-  var backPay  = mdata.backPay||0;
-  var totalDays= paidDays + Math.abs(backPay);
-  var lopDates = mdata.lopDates||'NA';
-  var loprPos  = mdata.loprPos||'NA';
-  var loprNeg  = mdata.loprNeg||'NA';
-
-  // Salary calculations
-  var earnedBasic = parseFloat(((emp.basic/workDays)*paidDays).toFixed(2));
-  var earnedHRA   = parseFloat(((emp.hra/workDays)*paidDays).toFixed(2));
-  var earnedTA    = parseFloat(((emp.transport/workDays)*paidDays).toFixed(2));
-  var actualTotal = emp.basic + emp.hra + emp.transport;
-  var otPay       = parseFloat(((emp.otHours||0)*(emp.otRate||0)).toFixed(2));
-  var earnedTotal = parseFloat((earnedBasic+earnedHRA+earnedTA).toFixed(2));
-  var grossNet    = earnedTotal + otPay;
-
-  // Accountant policy: tax on gross, then rounding diff deducted
-  var taxAmt    = emp.taxPct>0 ? parseFloat(((grossNet*emp.taxPct)/100).toFixed(2)) : 0;
-  var netExact  = grossNet - taxAmt;
-  var netRounded= Math.floor(netExact);
-  var roundDiff = parseFloat((netExact-netRounded).toFixed(2));
-  var totalDed  = parseFloat((taxAmt+roundDiff).toFixed(2));
-  var netSalary = netRounded;
-
+  var LOGO_SRC=typeof LOGO!=='undefined'?LOGO:'';
   var H='<div class="ps-wrap">';
   H+='<div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:2px solid #1e3a8a;background:#fff">';
-  H+='<img src="'+LOGO+'" alt="Asterwix" style="height:44px;object-fit:contain;">';
+  H+='<img src="'+LOGO_SRC+'" alt="Asterwix" style="height:44px;object-fit:contain;">';
   H+='<div style="text-align:right">'+curBadge+'<div style="font-size:10px;color:#999;margin-top:4px;font-family:monospace">'+emp.code+'</div></div>';
   H+='</div>';
   H+='<div class="ps-title">Payslip for the month of '+month+'</div>';
-
-  // Employee info table
   H+='<table class="ps-table">';
   H+='<tr><td class="ps-label">Employee Name</td><td class="ps-val">'+emp.name+'</td><td class="ps-label">Employee Code</td><td>'+emp.code+'</td></tr>';
   H+='<tr><td class="ps-label">Designation</td><td>'+emp.designation+'</td><td class="ps-label">Date of Joining</td><td>'+emp.joinDate+'</td></tr>';
-  H+='<tr><td class="ps-label">Bank Account No</td><td>'+emp.bankAcc+'</td><td class="ps-label">Bank</td><td>'+emp.bank+'</td></tr>';
+  H+='<tr><td class="ps-label">Bank Account No</td><td>'+bankAcc+'</td><td class="ps-label">Bank</td><td>'+bankName+'</td></tr>';
   H+='<tr><td class="ps-label">Work Location</td><td>'+emp.flag+' '+emp.location+'</td><td class="ps-label">Currency</td><td><strong>'+cur+' '+sym+'</strong></td></tr>';
   H+='</table>';
-
-  // Attendance
   H+='<table class="ps-table"><tr><td colspan="4" class="ps-section-hdr">Attendance for the month of '+month+'</td></tr>';
   H+='<tr><th style="text-align:center">Paid Days</th><th style="text-align:center">LOP</th><th style="text-align:center">Back Pay Days</th><th style="text-align:center">Total</th></tr>';
-  H+='<tr><td style="text-align:center;font-weight:700">'+paidDays.toFixed(2)+'</td>';
-  H+='<td style="text-align:center;color:#b91c1c;font-weight:700">'+lop.toFixed(2)+'</td>';
-  H+='<td style="text-align:center;color:#92400e;font-weight:700">'+backPay.toFixed(2)+'</td>';
-  H+='<td style="text-align:center;font-weight:800">'+totalDays.toFixed(2)+'</td></tr></table>';
-
-  // Salary + Deductions
-  H+='<table class="ps-table">';
-  H+='<tr><td colspan="3" class="ps-earn-hdr">Salary</td><td colspan="2" class="ps-ded-hdr">Deductions</td></tr>';
+  H+='<tr><td style="text-align:center;font-weight:700">'+paidDays.toFixed(2)+'</td><td style="text-align:center;color:#b91c1c;font-weight:700">'+lop.toFixed(2)+'</td><td style="text-align:center;color:#92400e;font-weight:700">'+backPay.toFixed(2)+'</td><td style="text-align:center;font-weight:800">'+totalDays.toFixed(2)+'</td></tr></table>';
+  H+='<table class="ps-table"><tr><td colspan="3" class="ps-earn-hdr">Salary</td><td colspan="2" class="ps-ded-hdr">Deductions</td></tr>';
   H+='<tr><th>Particulars</th><th>Actual</th><th>Earned</th><th>Particulars</th><th>Amount</th></tr>';
-
-  H+='<tr><td>Basic</td><td style="text-align:right">'+fmtMoney(emp.basic,cur)+'</td><td style="text-align:right;color:#166534">'+fmtMoney(earnedBasic,cur)+'</td>';
-  H+='<td style="color:#b91c1c">Netpay Rounding Difference</td><td style="text-align:right;color:#b91c1c">'+fmtMoney(roundDiff,cur)+'</td></tr>';
-
+  H+='<tr><td>Basic</td><td style="text-align:right">'+fmtMoney(emp.basic,cur)+'</td><td style="text-align:right;color:#166534">'+fmtMoney(earnedBasic,cur)+'</td><td style="color:#b91c1c">Netpay Rounding Diff</td><td style="text-align:right;color:#b91c1c">'+fmtMoney(roundDiff,cur)+'</td></tr>';
   H+='<tr><td>House Rent Allowance</td><td style="text-align:right">'+fmtMoney(emp.hra,cur)+'</td><td style="text-align:right;color:#166534">'+fmtMoney(earnedHRA,cur)+'</td>';
-  if(taxAmt>0){
-    H+='<td style="color:#b91c1c">Income Tax ('+emp.taxPct+'%)</td><td style="text-align:right;color:#b91c1c">'+fmtMoney(taxAmt,cur)+'</td></tr>';
-  } else { H+='<td></td><td></td></tr>'; }
-
+  H+=taxAmt>0?'<td style="color:#b91c1c">Income Tax ('+emp.taxPct+'%)</td><td style="text-align:right;color:#b91c1c">'+fmtMoney(taxAmt,cur)+'</td></tr>':'<td></td><td></td></tr>';
   H+='<tr><td>Transport Allowance</td><td style="text-align:right">'+fmtMoney(emp.transport,cur)+'</td><td style="text-align:right;color:#166534">'+fmtMoney(earnedTA,cur)+'</td><td></td><td></td></tr>';
-
-  if(otPay>0){
-    H+='<tr><td>Overtime ('+emp.otHours+' hrs @ '+sym+emp.otRate+'/hr)</td>';
-    H+='<td style="text-align:right">'+fmtMoney(otPay,cur)+'</td>';
-    H+='<td style="text-align:right;color:#166534;font-weight:700">+ '+fmtMoney(otPay,cur)+'</td><td></td><td></td></tr>';
-  }
-
-  H+='<tr class="ps-total-row"><td>Total Earning</td>';
-  H+='<td style="text-align:right">'+fmtMoney(actualTotal+otPay,cur)+'</td>';
-  H+='<td style="text-align:right">'+fmtMoney(earnedTotal+otPay,cur)+'</td>';
-  H+='<td>Total Deductions</td><td style="text-align:right;color:#b91c1c">'+fmtMoney(totalDed,cur)+'</td></tr>';
+  if(otPay>0){H+='<tr><td>Overtime ('+emp.otHours+' hrs)</td><td style="text-align:right">'+fmtMoney(otPay,cur)+'</td><td style="text-align:right;color:#166534;font-weight:700">+ '+fmtMoney(otPay,cur)+'</td><td></td><td></td></tr>';}
+  H+='<tr class="ps-total-row"><td>Total Earning</td><td style="text-align:right">'+fmtMoney(actualTotal+otPay,cur)+'</td><td style="text-align:right">'+fmtMoney(earnedTotal+otPay,cur)+'</td><td>Total Deductions</td><td style="text-align:right;color:#b91c1c">'+fmtMoney(totalDed,cur)+'</td></tr>';
   H+='</table>';
-
-  // Net salary
-  H+='<table class="ps-table">';
-  H+='<tr class="ps-net-row"><td colspan="3">Net Salary Paid ('+cur+')</td>';
-  H+='<td colspan="2" style="text-align:right;font-size:16px">'+fmtMoney(netSalary,cur)+'</td></tr>';
-  H+='<tr class="ps-words-row"><td colspan="2">(Net Pay) Amount in Words ('+cur+')</td>';
-  H+='<td colspan="3">'+numToWords(netSalary,cur)+'</td></tr>';
-  H+='</table>';
-
-  // LOP dates
-  H+='<table class="ps-table">';
-  H+='<tr class="ps-lop-row"><td colspan="5"><strong>LOP Date(s):</strong> '+lopDates+'</td></tr>';
-  H+='<tr class="ps-lop-row"><td colspan="5"><strong>LOPR (+ve) Date(s):</strong> '+loprPos+'</td></tr>';
-  H+='<tr class="ps-lop-row"><td colspan="5"><strong>LOPR (-ve) Date(s):</strong> '+loprNeg+'</td></tr>';
-  H+='</table>';
-
-  // Signature
-  H+='<div class="ps-stamp">';
-  H+='<div><strong>Generated:</strong> '+new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+'</div>';
-  H+='<div style="text-align:center"><strong>Employee Signature</strong><br><br>___________________</div>';
-  H+='<div style="text-align:right"><strong>Authorized Signatory</strong><br><br>___________________</div>';
+  H+='<table class="ps-table"><tr class="ps-net-row"><td colspan="3">Net Salary Paid ('+cur+')</td><td colspan="2" style="text-align:right;font-size:16px">'+fmtMoney(netSalary,cur)+'</td></tr>';
+  H+='<tr class="ps-words-row"><td colspan="2">(Net Pay) Amount in Words ('+cur+')</td><td colspan="3">'+numToWords(netSalary,cur)+'</td></tr></table>';
+  H+='<table class="ps-table"><tr class="ps-lop-row"><td colspan="5"><strong>LOP Date(s):</strong> '+lopDates+'</td></tr><tr class="ps-lop-row"><td colspan="5"><strong>LOPR (+ve) Date(s):</strong> '+loprPos+'</td></tr><tr class="ps-lop-row"><td colspan="5"><strong>LOPR (-ve) Date(s):</strong> '+loprNeg+'</td></tr></table>';
+  H+='<div class="ps-stamp"><div><strong>Generated:</strong> '+new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+'</div><div style="text-align:center"><strong>Employee Signature</strong><br><br>___________________</div><div style="text-align:right"><strong>Authorized Signatory</strong><br><br>___________________</div></div>';
   H+='</div>';
-  H+='</div>';
-
-  document.getElementById('ps-output').innerHTML = H;
+  document.getElementById('ps-output').innerHTML=H;
 }
 
-// ── Currency Switch for Add Employee modal ──
+// ── Employee modal helpers ────────────────────────────────────
 function updateEmpSalaryCurrency(location){
-  var cs=document.getElementById('emp-currency');
-  var sl=document.getElementById('emp-sal-lbl');
-  var ol=document.getElementById('emp-ot-lbl');
-  var nt=document.getElementById('emp-currency-note');
-  var si=document.getElementById('emp-salary');
-  var oi=document.getElementById('emp-ot');
-  if(location==='India'){
-    if(cs) cs.value='INR';
-    if(sl) sl.textContent='Basic Salary (INR \u20b9)';
-    if(ol) ol.textContent='OT Rate/hr (INR \u20b9)';
-    if(nt) nt.style.display='block';
-    if(si) si.placeholder='45000';
-    if(oi) oi.placeholder='250';
-  } else {
-    if(cs) cs.value='AED';
-    if(sl) sl.textContent='Basic Salary (AED)';
-    if(ol) ol.textContent='OT Rate/hr (AED)';
-    if(nt) nt.style.display='none';
-    if(si) si.placeholder='8500';
-    if(oi) oi.placeholder='50';
-  }
+  var cs=document.getElementById('emp-currency'),sl=document.getElementById('emp-sal-lbl'),ol=document.getElementById('emp-ot-lbl'),nt=document.getElementById('emp-currency-note'),si=document.getElementById('emp-salary'),oi=document.getElementById('emp-ot');
+  if(location==='India'){if(cs)cs.value='INR';if(sl)sl.textContent='Basic Salary (INR \u20b9)';if(ol)ol.textContent='OT Rate/hr (INR \u20b9)';if(nt)nt.style.display='block';if(si)si.placeholder='45000';if(oi)oi.placeholder='250';}
+  else{if(cs)cs.value='AED';if(sl)sl.textContent='Basic Salary (AED)';if(ol)ol.textContent='OT Rate/hr (AED)';if(nt)nt.style.display='none';if(si)si.placeholder='8500';if(oi)oi.placeholder='50';}
 }
-
 function saveNewEmployee(){
-  var loc=document.getElementById('emp-location');
-  var cur=document.getElementById('emp-currency');
-  var lv=loc?loc.value:'UAE';
-  var cv=cur?cur.value:'AED';
+  var loc=document.getElementById('emp-location'),cur=document.getElementById('emp-currency');
+  var lv=loc?loc.value:'UAE',cv=cur?cur.value:'AED';
   closeM('m-emp');
   showToast('Employee saved \u2014 '+lv+' \u2014 '+cv+' \u2713','ok');
 }

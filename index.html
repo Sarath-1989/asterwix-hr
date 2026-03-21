@@ -484,7 +484,7 @@ input:checked+.slider:before{transform:translateX(18px)}
       <div class="card">
         <div class="chdr"><div class="ctitle">All Employees</div><input style="padding:6px 10px;border:1.5px solid var(--bord);border-radius:7px;font-size:12px;outline:none;width:190px;background:var(--surf);font-family:&#39;Nunito Sans&#39;,sans-serif" placeholder="Search..."></div>
         <div class="gwrap"><table>
-          <thead><tr><th>ID</th><th>Name</th><th>Designation</th><th>Dept</th><th>Join</th><th>Salary</th><th>Status</th><th>Action</th></tr></thead>
+          <thead><tr><th>ID</th><th>Name</th><th>Designation</th><th>Dept</th><th>Location</th><th>Join</th><th>Salary</th><th>Status</th><th>Action</th></tr></thead>
           <tbody>
             <tr><td><span style="font-family:&#39;JetBrains Mono&#39;,monospace;font-size:11px">AWX-001</span></td><td><div class="nm">Ahmed Al Mansouri</div><div class="sm"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c4a5aca9a1a084a5b7b0a1b6b3adbceaa7aba9">[email&#160;protected]</a></div></td><td>BIM Lead</td><td>BIM</td><td>Jan 2022</td><td style="font-weight:700">12,000</td><td><span class="badge bok">Active</span></td><td><button class="btn bghost bsm" onclick="openM(&#39;m-emp&#39;)">Edit</button></td></tr>
             <tr><td><span style="font-family:&#39;JetBrains Mono&#39;,monospace;font-size:11px">AWX-002</span></td><td><div class="nm">Sara Johnson</div><div class="sm"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0f7c6e7d6e4f6e7c7b6a7d786677216c6062">[email&#160;protected]</a></div></td><td>Senior Architect</td><td>Design</td><td>Mar 2021</td><td style="font-weight:700">9,500</td><td><span class="badge bok">Active</span></td><td><button class="btn bghost bsm" onclick="openM(&#39;m-emp&#39;)">Edit</button></td></tr>
@@ -665,40 +665,42 @@ input:checked+.slider:before{transform:translateX(18px)}
 
     <!-- PAYSLIPS -->
     <div class="page" id="pg-payslips">
-      <div class="phdr"><div><div class="ptitle">Payslips</div><div class="psub">View and download payslips</div></div></div>
-      <div class="card" id="ps-selector" style="margin-bottom:16px"><div class="chdr"><div class="ctitle">Select Payslip</div></div>
-        <div class="cbody" style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
-          <div class="fld" style="margin:0;flex:1;min-width:180px"><label>Employee</label>
-            <select><option>Ahmed Al Mansouri (AWX-001)</option><option>Sara Johnson (AWX-002)</option><option selected>Ravi Patel (AWX-003)</option></select>
-          </div>
-          <div class="fld" style="margin:0;min-width:150px"><label>Month</label>
-            <select><option>March 2026</option><option>February 2026</option></select>
-          </div>
-          <button class="btn bdark" onclick="showToast(&#39;Payslip loaded.&#39;,&#39;&#39;)">Load</button>
+      <div class="phdr">
+        <div><div class="ptitle">Payslips</div><div class="psub">Official payslip — auto currency per employee</div></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn bghost" onclick="window.print()">&#128424; Print</button>
+          <button class="btn bdark" onclick="showToast('Downloading PDF...','')">&#128229; Download PDF</button>
         </div>
       </div>
-      <div class="payslip">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid var(--dark);padding-bottom:14px;margin-bottom:16px">
-          <div><img id="ps-logo" src="" alt="Asterwix" style="height:30px;object-fit:contain;display:block;margin-bottom:6px"><div style="font-size:11px;color:var(--mu)">Dubai, UAE</div></div>
-          <div style="text-align:right"><div style="font-size:14px;font-weight:900">PAYSLIP</div><div style="font-family:&#39;JetBrains Mono&#39;,monospace;font-size:11px;color:var(--mu);margin-top:3px">March 2026 &bull; AWX-003</div></div>
-        </div>
-        <div style="background:var(--surf);border-radius:8px;padding:12px 14px;margin-bottom:16px;display:grid;grid-template-columns:1fr 1fr;gap:9px">
-          <div><div style="font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.6px;font-weight:700">Employee</div><div style="font-weight:800;margin-top:2px">Ravi Patel</div></div>
-          <div><div style="font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.6px;font-weight:700">ID</div><div style="font-weight:700;font-family:&#39;JetBrains Mono&#39;,monospace;margin-top:2px">AWX-003</div></div>
-          <div><div style="font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.6px;font-weight:700">Department</div><div style="font-weight:700;margin-top:2px">MEP</div></div>
-          <div><div style="font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.6px;font-weight:700">Pay Period</div><div style="font-weight:700;margin-top:2px">1-31 March 2026</div></div>
-        </div>
-        <div class="psr"><span>Basic Salary</span><span>AED 8,500.00</span></div>
-        <div class="psr"><span>Overtime Pay (6.5 hrs)</span><span style="color:var(--ok);font-weight:700">+ AED 325.00</span></div>
-        <div class="psr tot"><span>Gross Salary</span><span>AED 8,825.00</span></div>
-        <div class="psr"><span>Absent Deduction (1 day)</span><span style="color:var(--danger)">- AED 283.00</span></div>
-        <div class="psr"><span>Income Tax (2%)</span><span style="color:var(--danger)">- AED 171.00</span></div>
-        <div class="psr net"><span>Net Salary</span><span>AED 8,371.00</span></div>
-        <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--bord);display:flex;justify-content:space-between;align-items:center">
-          <div style="font-size:11px;color:var(--mu)">Status: <span style="color:var(--ok);font-weight:700">Paid</span></div>
-          <div style="display:flex;gap:8px"><button class="btn bghost bsm" onclick="showToast(&#39;Printing...&#39;,&#39;&#39;)">Print</button><button class="btn bdark bsm" onclick="showToast(&#39;Downloading...&#39;,&#39;&#39;)">Download PDF</button></div>
-        </div>
-      </div>
+      <!-- Selector Card — rendered dynamically by initPayslipPage() -->
+      <div id="ps-selector-wrap"></div>
+      <!-- Payslip Print CSS -->
+      <style>
+        @media print {
+          #SB, .topbar, .phdr, #ps-selector, #toast { display:none!important; }
+          .main { margin-left:0!important; }
+          .page { padding:0!important; }
+          #ps-output { padding:0; }
+        }
+        .ps-wrap { background:#fff; border:1px solid #ccc; border-radius:10px; overflow:hidden; max-width:860px; margin:0 auto; font-size:13px; }
+        .ps-title { background:#1e3a8a; color:#fff; text-align:center; padding:10px; font-size:14px; font-weight:800; letter-spacing:.5px; }
+        .ps-table { width:100%; border-collapse:collapse; }
+        .ps-table td, .ps-table th { border:1px solid #ccc; padding:8px 10px; vertical-align:top; }
+        .ps-table th { background:#f0f4ff; font-weight:700; font-size:12px; }
+        .ps-label { font-weight:700; background:#f8f9fa; width:160px; font-size:12px; }
+        .ps-val { color:#1e3a8a; font-weight:600; }
+        .ps-section-hdr { background:#1e3a8a; color:#fff; text-align:center; font-weight:700; padding:7px 10px; font-size:13px; }
+        .ps-earn-hdr { background:#e8f4e8; font-weight:700; text-align:center; }
+        .ps-ded-hdr { background:#fce8e8; font-weight:700; text-align:center; }
+        .ps-total-row td { font-weight:800; background:#f0f4ff; }
+        .ps-net-row td { background:#1e3a8a; color:#fff; font-weight:900; font-size:14px; padding:10px; }
+        .ps-words-row td { font-style:italic; font-weight:700; background:#fffbeb; border:1px solid #fde68a; color:#92400e; font-size:11px; }
+        .ps-lop-row td { background:#fef2f2; color:#b91c1c; font-size:11px; font-weight:600; padding:7px 10px; }
+        .ps-stamp { display:flex; justify-content:space-between; padding:16px 20px; border-top:1px solid #ccc; margin-top:4px; font-size:11px; color:#666; }
+        .ps-currency-badge { display:inline-flex; align-items:center; gap:4px; background:#dbeafe; color:#1e3a8a; font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; font-family:monospace; }
+      </style>
+      <!-- Payslip Output -->
+      <div id="ps-output"><div style="text-align:center;padding:40px;color:var(--mu);font-size:13px;">Select an employee and click <strong>Load Payslip</strong></div></div>
     </div>
 
     <!-- REPORTS -->
@@ -854,9 +856,29 @@ input:checked+.slider:before{transform:translateX(18px)}
       <div class="frow"><div class="fld"><label>Email</label><input type="email" placeholder="ahmed@asterwix.com"></div><div class="fld"><label>Phone</label><input placeholder="+971 50 000 0000"></div></div>
       <div class="frow c3"><div class="fld"><label>Employee ID</label><input value="AWX-025"></div><div class="fld"><label>Department</label><select><option>BIM</option><option>Design</option><option>MEP</option><option>HR</option><option>Accounts</option></select></div><div class="fld"><label>Designation</label><input placeholder="BIM Engineer"></div></div>
       <div class="frow"><div class="fld"><label>Join Date</label><input type="date" value="2026-03-20"></div><div class="fld"><label>Contract</label><select><option>Full Time</option><option>Part Time</option><option>Contract</option></select></div></div>
-      <div class="frow"><div class="fld"><label>Basic Salary (AED)</label><input type="number" placeholder="8500"></div><div class="fld"><label>OT Rate/hr (AED)</label><input type="number" placeholder="50"></div></div>
+      <div class="frow">
+        <div class="fld"><label>Work Location</label>
+          <select id="emp-location" onchange="updateEmpSalaryCurrency(this.value)">
+            <option value="UAE">&#127462;&#127466; UAE (AED)</option>
+            <option value="India">&#127470;&#127475; India (INR &#8377;)</option>
+          </select>
+        </div>
+        <div class="fld"><label>Salary Currency</label>
+          <select id="emp-currency">
+            <option value="AED">AED &mdash; UAE Dirham</option>
+            <option value="INR">INR &mdash; Indian Rupee &#8377;</option>
+          </select>
+        </div>
+      </div>
+      <div class="frow">
+        <div class="fld"><label id="emp-sal-lbl">Basic Salary (AED)</label><input type="number" id="emp-salary" placeholder="8500"></div>
+        <div class="fld"><label id="emp-ot-lbl">OT Rate/hr (AED)</label><input type="number" id="emp-ot" placeholder="50"></div>
+      </div>
+      <div id="emp-currency-note" style="margin-bottom:12px;padding:9px 12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;font-size:11px;font-weight:600;color:#1e3a8a;display:none;">
+        &#8377; Indian Rupee selected &mdash; payslip will display in INR for this employee.
+      </div>
     </div>
-    <div class="mfoot"><button class="btn bghost" onclick="closeM(&#39;m-emp&#39;)">Cancel</button><button class="btn bdark" onclick="closeM(&#39;m-emp&#39;);showToast(&#39;Employee added!&#39;,&#39;ok&#39;)">Save</button></div>
+    <div class="mfoot"><button class="btn bghost" onclick="closeM('m-emp')">Cancel</button><button class="btn bdark" onclick="saveNewEmployee()">Save Employee</button></div>
   </div>
 </div>
 
@@ -2235,6 +2257,7 @@ function goPage(id) {
   if (id === "dash") buildDash();
   if (id === "users") renderUsers();
   if (id === "checkin") { setTimeout(function(){ initCiMap(); getGPS(); }, 200); }
+  if (id === "payslips") { setTimeout(function(){ initPayslipPage(); }, 100); }
   if (id === "admin" && adminMap) { setTimeout(function(){ adminMap.invalidateSize(); }, 150); }
   if (id === "admin") { setTimeout(renderDeviceApprovals, 400); }
   closeMob();
@@ -2571,4 +2594,348 @@ function showToast(msg, type) {
   toastTmr = setTimeout(function(){ t.classList.remove("on"); }, 2500); }
 </script>
 </body>
+
+
+<script>
+
+// ══════════════════════════════════════════════════════════════
+//  PAYSLIP ACCESS CONTROL
+//  superadmin + accountant  → see ALL employees
+//  hr                       → see ALL employees
+//  manager / employee       → see ONLY their own payslip
+// ══════════════════════════════════════════════════════════════
+
+// Map login username → PAYSLIP_DATA key
+var USER_PAYSLIP_KEY = {
+  'superadmin': null,       // admin — no personal payslip
+  'hr.admin':   null,       // HR admin — no personal payslip
+  'accountant': null,       // accountant — no personal payslip
+  'a.mansouri': 'a.mansouri',
+  'sara.j':     'sara.j',
+  'ravi.p':     'ravi.p',
+  'fatima.h':   'fatima.h',
+  'james.o':    'james.o'
+};
+
+var ALL_EMPLOYEES_FOR_PAYSLIP = [
+  { key:'a.mansouri', label:'Ahmed Al Mansouri (AWX-001) — AED' },
+  { key:'sara.j',     label:'Sara Johnson (AWX-002) — AED' },
+  { key:'ravi.p',     label:'Ravi Patel (AWX-003) — INR ₹' },
+  { key:'fatima.h',   label:'Fatima Hassan (AWX-004) — AED' },
+  { key:'james.o',    label:'James Okafor (AWX-005) — INR ₹' }
+];
+
+function initPayslipPage() {
+  if (!CU) return;
+  var role    = CU.role;
+  var wrap    = document.getElementById('ps-selector-wrap');
+  var output  = document.getElementById('ps-output');
+  if (!wrap) return;
+
+  // Roles that can see ALL payslips
+  var canSeeAll = (role === 'superadmin' || role === 'accountant' || role === 'hr');
+
+  if (canSeeAll) {
+    // Build full selector
+    var opts = ALL_EMPLOYEES_FOR_PAYSLIP.map(function(e){
+      return '<option value="'+e.key+'">'+e.label+'</option>';
+    }).join('');
+
+    wrap.innerHTML =
+      '<div class="card" style="margin-bottom:16px">' +
+        '<div class="chdr"><div class="ctitle">Select Payslip</div>' +
+        '<span class="badge bok" style="font-size:9px">&#128274; Full Access</span></div>' +
+        '<div class="cbody" style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">' +
+          '<div class="fld" style="margin:0;flex:1;min-width:180px"><label>Employee</label>' +
+            '<select id="ps-emp-select">'+opts+'</select>' +
+          '</div>' +
+          '<div class="fld" style="margin:0;min-width:160px"><label>Month</label>' +
+            '<select id="ps-month-select">' +
+              '<option value="March 2026" selected>March 2026</option>' +
+              '<option value="February 2026">February 2026</option>' +
+              '<option value="January 2026">January 2026</option>' +
+            '</select>' +
+          '</div>' +
+          '<button class="btn bdark" onclick="renderPayslip()">Load Payslip</button>' +
+        '</div>' +
+      '</div>';
+
+    if (output) output.innerHTML =
+      '<div style="text-align:center;padding:40px;color:var(--mu);font-size:13px;">' +
+      'Select an employee and click <strong>Load Payslip</strong></div>';
+
+  } else {
+    // Employee / Manager — find their own payslip key
+    var uname = null;
+    Object.keys(USERS).forEach(function(k){ if(USERS[k] === CU) uname = k; });
+    var myKey = USER_PAYSLIP_KEY[uname] || null;
+
+    if (!myKey || !PAYSLIP_DATA[myKey]) {
+      wrap.innerHTML =
+        '<div class="alert alwarn"><span>&#9888;</span>' +
+        '<div>No payslip record found for your account. Contact HR Admin.</div></div>';
+      return;
+    }
+
+    var emp = PAYSLIP_DATA[myKey];
+    var curSym = emp.currency === 'INR' ? '&#8377; INR' : 'AED';
+
+    wrap.innerHTML =
+      '<div class="card" style="margin-bottom:16px">' +
+        '<div class="chdr"><div class="ctitle">My Payslip</div>' +
+        '<span class="badge bblue" style="font-size:9px">&#128100; Personal Only</span></div>' +
+        '<div class="cbody" style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">' +
+          '<div class="fld" style="margin:0;flex:1"><label>Employee</label>' +
+            '<input readonly value="'+emp.name+' ('+emp.code+') — '+curSym+'" ' +
+            'style="background:#f0f0f0;color:var(--mu);border:1.5px solid var(--bord);border-radius:8px;padding:9px 12px;font-size:13px;width:100%">' +
+            '<input type="hidden" id="ps-emp-select" value="'+myKey+'">' +
+          '</div>' +
+          '<div class="fld" style="margin:0;min-width:160px"><label>Month</label>' +
+            '<select id="ps-month-select">' +
+              '<option value="March 2026" selected>March 2026</option>' +
+              '<option value="February 2026">February 2026</option>' +
+              '<option value="January 2026">January 2026</option>' +
+            '</select>' +
+          '</div>' +
+          '<button class="btn bdark" onclick="renderPayslip()">View My Payslip</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="alert alblue" style="max-width:860px;margin:0 auto 12px">' +
+        '<span>&#128274;</span>' +
+        '<div>You can only view <strong>your own payslip</strong>. Contact HR Admin for any queries.</div>' +
+      '</div>';
+
+    // Auto-load current month payslip
+    if (output) output.innerHTML =
+      '<div style="text-align:center;padding:30px;color:var(--mu);font-size:13px;">' +
+      'Select a month and click <strong>View My Payslip</strong></div>';
+  }
+}
+
+// ══ PAYSLIP DATA ══
+var PAYSLIP_DATA = {
+  'a.mansouri': {
+    name:'Ahmed Al Mansouri', code:'AWX-001', designation:'BIM Lead',
+    joinDate:'01 Jan 2022', bank:'Emirates NBD', bankAcc:'AE123456789012345678901',
+    currency:'AED', location:'UAE', flag:'🇦🇪',
+    basic:12000, hra:4000, transport:2000, otHours:3.5, otRate:60, taxPct:3,
+    months:{
+      'March 2026':    {paidDays:18, workDays:20, lop:0,   backPay:0,  lopDates:'NA', loprPos:'NA', loprNeg:'NA'},
+      'February 2026': {paidDays:25.5,workDays:28,lop:2.5, backPay:-1, lopDates:'05 Feb 2026, 07 Feb 2026, 12 Feb 2026', loprPos:'NA', loprNeg:'28 Jan 2026, 31 Jan 2026'},
+      'January 2026':  {paidDays:22, workDays:23, lop:1,   backPay:0,  lopDates:'15 Jan 2026', loprPos:'NA', loprNeg:'NA'}
+    }
+  },
+  'sara.j': {
+    name:'Sara Johnson', code:'AWX-002', designation:'Senior Architect',
+    joinDate:'01 Mar 2021', bank:'ADCB', bankAcc:'AE260030014125260920001',
+    currency:'AED', location:'UAE', flag:'🇦🇪',
+    basic:9500, hra:3325, transport:1900, otHours:3.5, otRate:55, taxPct:0,
+    months:{
+      'March 2026':    {paidDays:16, workDays:20, lop:2, backPay:0, lopDates:'12 Mar 2026, 13 Mar 2026', loprPos:'NA', loprNeg:'NA'},
+      'February 2026': {paidDays:24, workDays:28, lop:2, backPay:0, lopDates:'20 Feb 2026, 21 Feb 2026', loprPos:'NA', loprNeg:'NA'},
+      'January 2026':  {paidDays:23, workDays:23, lop:0, backPay:0, lopDates:'NA', loprPos:'NA', loprNeg:'NA'}
+    }
+  },
+  'ravi.p': {
+    name:'Ravi Patel', code:'AWX-003', designation:'MEP Engineer',
+    joinDate:'01 Jun 2022', bank:'HDFC Bank', bankAcc:'HDFC0001234567890',
+    currency:'INR', location:'India', flag:'🇮🇳',
+    basic:45000, hra:18000, transport:8500, otHours:6.5, otRate:250, taxPct:5,
+    months:{
+      'March 2026':    {paidDays:17, workDays:20, lop:1, backPay:0,  lopDates:'10 Mar 2026', loprPos:'NA', loprNeg:'NA'},
+      'February 2026': {paidDays:26, workDays:28, lop:2, backPay:0,  lopDates:'06 Feb 2026, 07 Feb 2026', loprPos:'NA', loprNeg:'NA'},
+      'January 2026':  {paidDays:23, workDays:23, lop:0, backPay:0,  lopDates:'NA', loprPos:'NA', loprNeg:'NA'}
+    }
+  },
+  'fatima.h': {
+    name:'Fatima Hassan', code:'AWX-004', designation:'HR Executive',
+    joinDate:'01 Sep 2020', bank:'Dubai Islamic Bank', bankAcc:'AE390340000123456789012',
+    currency:'AED', location:'UAE', flag:'🇦🇪',
+    basic:7000, hra:2450, transport:1400, otHours:0, otRate:40, taxPct:2,
+    months:{
+      'March 2026':    {paidDays:17, workDays:20, lop:0, backPay:0, lopDates:'NA', loprPos:'NA', loprNeg:'NA'},
+      'February 2026': {paidDays:28, workDays:28, lop:0, backPay:0, lopDates:'NA', loprPos:'NA', loprNeg:'NA'},
+      'January 2026':  {paidDays:23, workDays:23, lop:0, backPay:0, lopDates:'NA', loprPos:'NA', loprNeg:'NA'}
+    }
+  },
+  'james.o': {
+    name:'James Okafor', code:'AWX-005', designation:'BIM Coordinator',
+    joinDate:'01 Nov 2023', bank:'SBI', bankAcc:'SBI0009876543210',
+    currency:'INR', location:'India', flag:'🇮🇳',
+    basic:32000, hra:12800, transport:6400, otHours:0, otRate:180, taxPct:4,
+    months:{
+      'March 2026':    {paidDays:14, workDays:20, lop:3, backPay:0, lopDates:'02 Mar, 03 Mar, 04 Mar 2026', loprPos:'NA', loprNeg:'NA'},
+      'February 2026': {paidDays:24, workDays:28, lop:2, backPay:0, lopDates:'10 Feb 2026, 11 Feb 2026', loprPos:'NA', loprNeg:'NA'},
+      'January 2026':  {paidDays:21, workDays:23, lop:0, backPay:0, lopDates:'NA', loprPos:'NA', loprNeg:'NA'}
+    }
+  }
+};
+
+function numToWordsCore(n) {
+  var ones=['','ONE','TWO','THREE','FOUR','FIVE','SIX','SEVEN','EIGHT','NINE','TEN','ELEVEN','TWELVE','THIRTEEN','FOURTEEN','FIFTEEN','SIXTEEN','SEVENTEEN','EIGHTEEN','NINETEEN'];
+  var tens=['','','TWENTY','THIRTY','FORTY','FIFTY','SIXTY','SEVENTY','EIGHTY','NINETY'];
+  if(n===0) return 'ZERO';
+  if(n<20) return ones[n];
+  if(n<100) return tens[Math.floor(n/10)]+(n%10?' '+ones[n%10]:'');
+  if(n<1000) return ones[Math.floor(n/100)]+' HUNDRED'+(n%100?' AND '+numToWordsCore(n%100):'');
+  if(n<100000) return numToWordsCore(Math.floor(n/1000))+' THOUSAND'+(n%1000?' '+numToWordsCore(n%1000):'');
+  if(n<10000000) return numToWordsCore(Math.floor(n/100000))+' LAKH'+(n%100000?' '+numToWordsCore(n%100000):'');
+  return numToWordsCore(Math.floor(n/10000000))+' CRORE'+(n%10000000?' '+numToWordsCore(n%10000000):'');
+}
+function numToWords(n,cur){ return numToWordsCore(Math.floor(n))+(cur==='INR'?' RUPEES ONLY':' DIRHAM ONLY'); }
+
+function fmtMoney(n,cur){
+  var sym=cur==='INR'?'\u20b9 ':'AED ';
+  return sym+parseFloat(n).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+function renderPayslip(){
+  var empKey = document.getElementById('ps-emp-select').value;
+  var month  = document.getElementById('ps-month-select').value;
+  var emp    = PAYSLIP_DATA[empKey];
+  if(!emp){ showToast('Employee not found','danger'); return; }
+
+  var mdata    = emp.months[month] || emp.months['March 2026'];
+  var cur      = emp.currency;
+  var sym      = cur==='INR'?'\u20b9':'AED';
+  var curBadge = cur==='INR'
+    ? '<span class="ps-currency-badge">&#127470;&#127475; INR \u20b9</span>'
+    : '<span class="ps-currency-badge">&#127462;&#127466; AED</span>';
+
+  var paidDays = mdata.paidDays||0;
+  var workDays = mdata.workDays||20;
+  var lop      = mdata.lop||0;
+  var backPay  = mdata.backPay||0;
+  var totalDays= paidDays + Math.abs(backPay);
+  var lopDates = mdata.lopDates||'NA';
+  var loprPos  = mdata.loprPos||'NA';
+  var loprNeg  = mdata.loprNeg||'NA';
+
+  // Salary calculations
+  var earnedBasic = parseFloat(((emp.basic/workDays)*paidDays).toFixed(2));
+  var earnedHRA   = parseFloat(((emp.hra/workDays)*paidDays).toFixed(2));
+  var earnedTA    = parseFloat(((emp.transport/workDays)*paidDays).toFixed(2));
+  var actualTotal = emp.basic + emp.hra + emp.transport;
+  var otPay       = parseFloat(((emp.otHours||0)*(emp.otRate||0)).toFixed(2));
+  var earnedTotal = parseFloat((earnedBasic+earnedHRA+earnedTA).toFixed(2));
+  var grossNet    = earnedTotal + otPay;
+
+  // Accountant policy: tax on gross, then rounding diff deducted
+  var taxAmt    = emp.taxPct>0 ? parseFloat(((grossNet*emp.taxPct)/100).toFixed(2)) : 0;
+  var netExact  = grossNet - taxAmt;
+  var netRounded= Math.floor(netExact);
+  var roundDiff = parseFloat((netExact-netRounded).toFixed(2));
+  var totalDed  = parseFloat((taxAmt+roundDiff).toFixed(2));
+  var netSalary = netRounded;
+
+  var H='<div class="ps-wrap">';
+  H+='<div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:2px solid #1e3a8a;background:#fff">';
+  H+='<img src="'+LOGO+'" alt="Asterwix" style="height:44px;object-fit:contain;">';
+  H+='<div style="text-align:right">'+curBadge+'<div style="font-size:10px;color:#999;margin-top:4px;font-family:monospace">'+emp.code+'</div></div>';
+  H+='</div>';
+  H+='<div class="ps-title">Payslip for the month of '+month+'</div>';
+
+  // Employee info table
+  H+='<table class="ps-table">';
+  H+='<tr><td class="ps-label">Employee Name</td><td class="ps-val">'+emp.name+'</td><td class="ps-label">Employee Code</td><td>'+emp.code+'</td></tr>';
+  H+='<tr><td class="ps-label">Designation</td><td>'+emp.designation+'</td><td class="ps-label">Date of Joining</td><td>'+emp.joinDate+'</td></tr>';
+  H+='<tr><td class="ps-label">Bank Account No</td><td>'+emp.bankAcc+'</td><td class="ps-label">Bank</td><td>'+emp.bank+'</td></tr>';
+  H+='<tr><td class="ps-label">Work Location</td><td>'+emp.flag+' '+emp.location+'</td><td class="ps-label">Currency</td><td><strong>'+cur+' '+sym+'</strong></td></tr>';
+  H+='</table>';
+
+  // Attendance
+  H+='<table class="ps-table"><tr><td colspan="4" class="ps-section-hdr">Attendance for the month of '+month+'</td></tr>';
+  H+='<tr><th style="text-align:center">Paid Days</th><th style="text-align:center">LOP</th><th style="text-align:center">Back Pay Days</th><th style="text-align:center">Total</th></tr>';
+  H+='<tr><td style="text-align:center;font-weight:700">'+paidDays.toFixed(2)+'</td>';
+  H+='<td style="text-align:center;color:#b91c1c;font-weight:700">'+lop.toFixed(2)+'</td>';
+  H+='<td style="text-align:center;color:#92400e;font-weight:700">'+backPay.toFixed(2)+'</td>';
+  H+='<td style="text-align:center;font-weight:800">'+totalDays.toFixed(2)+'</td></tr></table>';
+
+  // Salary + Deductions
+  H+='<table class="ps-table">';
+  H+='<tr><td colspan="3" class="ps-earn-hdr">Salary</td><td colspan="2" class="ps-ded-hdr">Deductions</td></tr>';
+  H+='<tr><th>Particulars</th><th>Actual</th><th>Earned</th><th>Particulars</th><th>Amount</th></tr>';
+
+  H+='<tr><td>Basic</td><td style="text-align:right">'+fmtMoney(emp.basic,cur)+'</td><td style="text-align:right;color:#166534">'+fmtMoney(earnedBasic,cur)+'</td>';
+  H+='<td style="color:#b91c1c">Netpay Rounding Difference</td><td style="text-align:right;color:#b91c1c">'+fmtMoney(roundDiff,cur)+'</td></tr>';
+
+  H+='<tr><td>House Rent Allowance</td><td style="text-align:right">'+fmtMoney(emp.hra,cur)+'</td><td style="text-align:right;color:#166534">'+fmtMoney(earnedHRA,cur)+'</td>';
+  if(taxAmt>0){
+    H+='<td style="color:#b91c1c">Income Tax ('+emp.taxPct+'%)</td><td style="text-align:right;color:#b91c1c">'+fmtMoney(taxAmt,cur)+'</td></tr>';
+  } else { H+='<td></td><td></td></tr>'; }
+
+  H+='<tr><td>Transport Allowance</td><td style="text-align:right">'+fmtMoney(emp.transport,cur)+'</td><td style="text-align:right;color:#166534">'+fmtMoney(earnedTA,cur)+'</td><td></td><td></td></tr>';
+
+  if(otPay>0){
+    H+='<tr><td>Overtime ('+emp.otHours+' hrs @ '+sym+emp.otRate+'/hr)</td>';
+    H+='<td style="text-align:right">'+fmtMoney(otPay,cur)+'</td>';
+    H+='<td style="text-align:right;color:#166534;font-weight:700">+ '+fmtMoney(otPay,cur)+'</td><td></td><td></td></tr>';
+  }
+
+  H+='<tr class="ps-total-row"><td>Total Earning</td>';
+  H+='<td style="text-align:right">'+fmtMoney(actualTotal+otPay,cur)+'</td>';
+  H+='<td style="text-align:right">'+fmtMoney(earnedTotal+otPay,cur)+'</td>';
+  H+='<td>Total Deductions</td><td style="text-align:right;color:#b91c1c">'+fmtMoney(totalDed,cur)+'</td></tr>';
+  H+='</table>';
+
+  // Net salary
+  H+='<table class="ps-table">';
+  H+='<tr class="ps-net-row"><td colspan="3">Net Salary Paid ('+cur+')</td>';
+  H+='<td colspan="2" style="text-align:right;font-size:16px">'+fmtMoney(netSalary,cur)+'</td></tr>';
+  H+='<tr class="ps-words-row"><td colspan="2">(Net Pay) Amount in Words ('+cur+')</td>';
+  H+='<td colspan="3">'+numToWords(netSalary,cur)+'</td></tr>';
+  H+='</table>';
+
+  // LOP dates
+  H+='<table class="ps-table">';
+  H+='<tr class="ps-lop-row"><td colspan="5"><strong>LOP Date(s):</strong> '+lopDates+'</td></tr>';
+  H+='<tr class="ps-lop-row"><td colspan="5"><strong>LOPR (+ve) Date(s):</strong> '+loprPos+'</td></tr>';
+  H+='<tr class="ps-lop-row"><td colspan="5"><strong>LOPR (-ve) Date(s):</strong> '+loprNeg+'</td></tr>';
+  H+='</table>';
+
+  // Signature
+  H+='<div class="ps-stamp">';
+  H+='<div><strong>Generated:</strong> '+new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+'</div>';
+  H+='<div style="text-align:center"><strong>Employee Signature</strong><br><br>___________________</div>';
+  H+='<div style="text-align:right"><strong>Authorized Signatory</strong><br><br>___________________</div>';
+  H+='</div>';
+  H+='</div>';
+
+  document.getElementById('ps-output').innerHTML = H;
+}
+
+// ── Currency Switch for Add Employee modal ──
+function updateEmpSalaryCurrency(location){
+  var cs=document.getElementById('emp-currency');
+  var sl=document.getElementById('emp-sal-lbl');
+  var ol=document.getElementById('emp-ot-lbl');
+  var nt=document.getElementById('emp-currency-note');
+  var si=document.getElementById('emp-salary');
+  var oi=document.getElementById('emp-ot');
+  if(location==='India'){
+    if(cs) cs.value='INR';
+    if(sl) sl.textContent='Basic Salary (INR \u20b9)';
+    if(ol) ol.textContent='OT Rate/hr (INR \u20b9)';
+    if(nt) nt.style.display='block';
+    if(si) si.placeholder='45000';
+    if(oi) oi.placeholder='250';
+  } else {
+    if(cs) cs.value='AED';
+    if(sl) sl.textContent='Basic Salary (AED)';
+    if(ol) ol.textContent='OT Rate/hr (AED)';
+    if(nt) nt.style.display='none';
+    if(si) si.placeholder='8500';
+    if(oi) oi.placeholder='50';
+  }
+}
+
+function saveNewEmployee(){
+  var loc=document.getElementById('emp-location');
+  var cur=document.getElementById('emp-currency');
+  var lv=loc?loc.value:'UAE';
+  var cv=cur?cur.value:'AED';
+  closeM('m-emp');
+  showToast('Employee saved \u2014 '+lv+' \u2014 '+cv+' \u2713','ok');
+}
+</script>
 </html>

@@ -1826,10 +1826,10 @@ function safeSet(key, val) {
   try { sessionStorage.setItem(key, val); } catch(e) { _memStore[key] = val; }
 }
 function safeGet(key) {
-  try { return safeGet(key); } catch(e) { return _memStore[key] || null; }
+  try { return sessionStorage.getItem(key); } catch(e) { return _memStore[key] || null; }
 }
 function safeRemove(key) {
-  try { safeRemove(key); } catch(e) { delete _memStore[key]; }
+  try { sessionStorage.removeItem(key); } catch(e) { delete _memStore[key]; }
 }
 
 // ── MOBILE SIDEBAR ──
@@ -2103,7 +2103,6 @@ function finishLogin(username) {
   // Hide all login screens
   document.querySelectorAll(".screen").forEach(function(s){
     s.classList.remove("on");
-    s.style.display = "none";
   });
 
   // Show APP

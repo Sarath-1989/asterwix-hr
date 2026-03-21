@@ -2763,6 +2763,20 @@ function showToast(msg, type) {
 //  EMPLOYEE PROFILE MODULE
 // ══════════════════════════════════════════════════════════════
 
+// ── Payslip access keys (defined first to avoid reference errors) ──
+var USER_PAYSLIP_KEY = {
+  'superadmin': null, 'hr.admin': null, 'accountant': null,
+  'a.mansouri': 'a.mansouri', 'sara.j': 'sara.j',
+  'ravi.p': 'ravi.p', 'fatima.h': 'fatima.h', 'james.o': 'james.o'
+};
+var ALL_EMPLOYEES_FOR_PAYSLIP = [
+  {key:'a.mansouri', label:'Ahmed Al Mansouri (AWX-001) — AED'},
+  {key:'sara.j',     label:'Sara Johnson (AWX-002) — AED'},
+  {key:'ravi.p',     label:'Ravi Patel (AWX-003) — INR ₹'},
+  {key:'fatima.h',   label:'Fatima Hassan (AWX-004) — AED'},
+  {key:'james.o',    label:'James Okafor (AWX-005) — INR ₹'}
+];
+
 // In-memory profile store (keyed by username)
 var PROFILE_STORE = {};
 // Bank audit log (per user)
@@ -3099,19 +3113,7 @@ function removeIDDoc() {
 
 // ══ PAYSLIP PAGE FUNCTIONS ══════════════════════════════════
 
-var USER_PAYSLIP_KEY = {
-  'superadmin': null, 'hr.admin': null, 'accountant': null,
-  'a.mansouri': 'a.mansouri', 'sara.j': 'sara.j',
-  'ravi.p': 'ravi.p', 'fatima.h': 'fatima.h', 'james.o': 'james.o'
-};
 
-var ALL_EMPLOYEES_FOR_PAYSLIP = [
-  {key:'a.mansouri', label:'Ahmed Al Mansouri (AWX-001) \u2014 AED'},
-  {key:'sara.j',     label:'Sara Johnson (AWX-002) \u2014 AED'},
-  {key:'ravi.p',     label:'Ravi Patel (AWX-003) \u2014 INR \u20b9'},
-  {key:'fatima.h',   label:'Fatima Hassan (AWX-004) \u2014 AED'},
-  {key:'james.o',    label:'James Okafor (AWX-005) \u2014 INR \u20b9'}
-];
 
 function initPayslipPage() {
   if (!CU) return;

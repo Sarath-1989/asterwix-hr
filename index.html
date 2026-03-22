@@ -1235,7 +1235,10 @@ input:checked+.slider:before{transform:translateX(18px)}
 <!-- MSAL.js for Microsoft Authentication -->
 <script src="https://unpkg.com/@azure/msal-browser@2.38.3/lib/msal-browser.min.js"></script>
 <script>
-function safePushState(s,t,u){try{safePushState(s,t,u);}catch(e){}}
+function safePushState(s,t,u){try{history.pushState(s,t,u);}catch(e){}}
+
+// Leaflet safety guard for iframe/srcdoc environments
+function leafletReady(){ return typeof L !== "undefined" && L !== null; }
 
 // Fallback if unpkg fails
 if (typeof msal === "undefined") {
@@ -2540,7 +2543,7 @@ function goPage(id) {
   if (t) t.textContent = titles[id] || id;
   if (id === "dash") buildDash();
   if (id === "users") renderUsers();
-  if (id === "checkin") { setTimeout(function(){ initCiMap(); getGPS(); }, 200); }
+  if (id === "checkin") { setTimeout(function(){ initCiMap(); getGPS(); }, 300); }
   if (id === "payslips") { setTimeout(function(){ initPayslipPage(); }, 150); }
   if (id === "profile")  { setTimeout(function(){ initProfilePage(); }, 100); }
   if (id === "admin" && adminMap) { setTimeout(function(){ adminMap.invalidateSize(); }, 150); }
@@ -2701,7 +2704,21 @@ function switchTab(group, id, el) {
 
 // ── GPS / MAP ──
 function initCiMap() {
-  if(!leafletReady()){console.warn("Leaflet not loaded, map disabled");return;}
+  if(!leafletReady()){
+    // Show a styled placeholder map when Leaflet can't load
+    var el = document.getElementById("ci-map");
+    if(el && !el.dataset.placeholder){
+      el.dataset.placeholder = "1";
+      el.style.cssText = "height:200px;border-radius:12px;overflow:hidden;margin-bottom:12px;background:linear-gradient(135deg,#e8f4f0 0%,#d4ede7 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;border:1.5px solid #b2d8d0;";
+      el.innerHTML = '<div style="text-align:center;color:#3d4f63;font-family:Nunito Sans,sans-serif;">'
+        + '<div style="font-size:32px;margin-bottom:8px">🗺️</div>'
+        + '<div style="font-size:13px;font-weight:700;color:#1a2332">Map loads when opened in browser</div>'
+        + '<div style="font-size:11px;color:#7a8fa8;margin-top:4px">OpenStreetMap · Office: Dubai, UAE</div>'
+        + '<div style="margin-top:10px;background:#00b899;color:#fff;padding:4px 14px;border-radius:20px;font-size:11px;font-weight:700;display:inline-block">📍 GPS active in browser</div>'
+        + '</div>';
+    }
+    return;
+  }
   try{
 
   if (ciMap) { ciMap.invalidateSize(); return; }
@@ -2716,7 +2733,20 @@ function initCiMap() {
 }
 
 function initAdminMap() {
-  if(!leafletReady()){console.warn("Leaflet not loaded, map disabled");return;}
+  if(!leafletReady()){
+    var el = document.getElementById("admin-map");
+    if(el && !el.dataset.placeholder){
+      el.dataset.placeholder = "1";
+      el.style.cssText = "height:240px;border-radius:12px;overflow:hidden;margin-bottom:12px;background:linear-gradient(135deg,#e8f4f0 0%,#d4ede7 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;border:1.5px solid #b2d8d0;";
+      el.innerHTML = '<div style="text-align:center;color:#3d4f63;font-family:Nunito Sans,sans-serif;">'
+        + '<div style="font-size:32px;margin-bottom:8px">🗺️</div>'
+        + '<div style="font-size:13px;font-weight:700;color:#1a2332">Office location map</div>'
+        + '<div style="font-size:11px;color:#7a8fa8;margin-top:4px">Drag pin to update office location</div>'
+        + '<div style="margin-top:10px;background:#1a2332;color:#fff;padding:4px 14px;border-radius:20px;font-size:11px;font-weight:700;display:inline-block">🌐 Opens in browser</div>'
+        + '</div>';
+    }
+    return;
+  }
   try{
 
   if (adminMap) return;

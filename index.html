@@ -146,7 +146,7 @@ body{font-family:"Nunito Sans",sans-serif;background:var(--bg);color:var(--tx);f
 /* ── APP SHELL ── */
 #APP{display:none}
 #APP.on{display:block}
-#SB{position:fixed;top:0;left:0;bottom:0;width:var(--sw);background:var(--sidebar-bg);display:flex;flex-direction:column;z-index:200;border-right:1px solid var(--sidebar-border);overflow-y:auto;transition:transform .25s ease}
+#SB{position:fixed;top:0;left:0;bottom:0;width:var(--sw);background:var(--sidebar-bg);display:flex;flex-direction:column;z-index:1000;border-right:1px solid var(--sidebar-border);overflow-y:auto;transition:transform .25s ease}
 .sb-logo{padding:18px 18px 14px;border-bottom:1px solid var(--sidebar-border);display:flex;flex-direction:column;align-items:flex-start;gap:6px}
 .sb-logo img{height:36px;object-fit:contain;filter:none;max-width:160px;background:#fff;border-radius:6px;padding:4px 10px;}
 .sb-tag{display:inline-block;margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:2.5px;background:#00b899;color:#fff;padding:2px 7px;border-radius:2px;text-transform:uppercase}
@@ -165,8 +165,8 @@ body{font-family:"Nunito Sans",sans-serif;background:var(--bg);color:var(--tx);f
 .sb-ms-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(0,120,212,.25);border:1px solid rgba(0,120,212,.4);color:#60a5fa;font-size:9px;font-weight:700;padding:2px 7px;border-radius:8px;font-family:'JetBrains Mono',monospace;margin-top:5px}
 .sb-out{margin-top:8px;font-size:11px;color:rgba(255,255,255,.4);cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:color .2s}
 .sb-out:hover{color:var(--danger)}
-.main{margin-left:var(--sw);min-height:100vh;display:flex;flex-direction:column}
-.topbar{height:58px;background:#ffffff;border-bottom:1px solid var(--bord);display:flex;align-items:center;padding:0 24px;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 1px 0 var(--bord)}
+.main{margin-left:var(--sw);min-height:100vh;display:flex;flex-direction:column;position:relative;z-index:1;}
+.topbar{height:58px;background:#ffffff;border-bottom:1px solid var(--bord);display:flex;align-items:center;padding:0 24px;gap:12px;position:sticky;top:0;z-index:500;box-shadow:0 1px 0 var(--bord)}
 #mob-btn{display:none;width:36px;height:36px;border-radius:7px;border:1.5px solid var(--bord);background:#fff;cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex-shrink:0;touch-action:manipulation}
 #mob-btn span{display:block;width:15px;height:2px;background:var(--tx);border-radius:2px}
 #pg-title{font-size:15px;font-weight:800;flex:1;color:var(--tx)}
@@ -174,7 +174,7 @@ body{font-family:"Nunito Sans",sans-serif;background:var(--bg);color:var(--tx);f
 #tb-date{font-size:11px;color:var(--mu);font-family:'JetBrains Mono',monospace}
 
 /* ── PAGES ── */
-.page{display:none;padding:20px 22px}
+.page{display:none;padding:20px 22px;isolation:isolate;}
 .page.on{display:block}
 
 /* KPI CARDS */
@@ -312,8 +312,19 @@ tbody td{padding:10px 12px;font-size:13px;color:var(--t2);vertical-align:middle}
 #toast.danger{background:#b91c1c}
 
 /* MAP */
-#ci-map{height:200px;border-radius:12px;overflow:hidden;margin-bottom:12px;background:#f0f2f5;}
-#admin-map{height:240px;border-radius:12px;overflow:hidden;margin-bottom:12px}
+#ci-map{height:200px;border-radius:12px;overflow:hidden;margin-bottom:12px;background:#f0f2f5;position:relative;z-index:0;isolation:isolate;}
+#admin-map{height:240px;border-radius:12px;overflow:hidden;margin-bottom:12px;position:relative;z-index:0;isolation:isolate;}
+/* ── Leaflet z-index fix — prevent map tiles escaping container on mobile ── */
+.leaflet-pane{z-index:1!important;}
+.leaflet-tile-pane{z-index:2!important;}
+.leaflet-overlay-pane{z-index:3!important;}
+.leaflet-marker-pane{z-index:4!important;}
+.leaflet-tooltip-pane{z-index:5!important;}
+.leaflet-popup-pane{z-index:6!important;}
+.leaflet-map-pane{z-index:0!important;}
+.leaflet-control-container{z-index:7!important;}
+#ci-map .leaflet-pane,#admin-map .leaflet-pane{position:absolute;}
+
 
 /* CHECKIN */
 .loc-card{background:#fff;border:1px solid var(--bord);border-radius:10px;overflow:hidden;margin-bottom:12px}
@@ -409,7 +420,7 @@ input:checked+.slider:before{transform:translateX(18px)}
 
     <div class="lfield">
       <label>Username</label>
-      <input id="l-user" type="text" placeholder="e.g. ravi.p" autocomplete="username"
+      <input id="l-user" type="text" placeholder="e.g. firstname.lastname" autocomplete="username"
         onkeydown="if(event.key==='Enter')document.getElementById('l-pass').focus()">
     </div>
     <div class="lfield">

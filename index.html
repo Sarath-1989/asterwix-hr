@@ -442,32 +442,9 @@ input:checked+.slider:before{transform:translateX(18px)}
       Sign in with Microsoft 365
     </button>
 
-    <div class="ldiv">or sign in with username</div>
+    <div class="lerr" id="login-err">Login failed.</div>
 
-    <div class="lerr" id="login-err">Incorrect username or password.</div>
-
-    <div class="lfield">
-      <label>Username</label>
-      <input id="l-user" type="text" placeholder="e.g. firstname.lastname" autocomplete="username"
-        onkeydown="if(event.key==='Enter')document.getElementById('l-pass').focus()">
-    </div>
-    <div class="lfield">
-      <label>Password</label>
-      <div class="pw-wrap">
-        <input id="l-pass" type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" autocomplete="current-password"
-          onkeydown="if(event.key==='Enter')doLogin()">
-        <button class="pw-eye" onclick="togglePw('l-pass',this)" type="button">&#128065;</button>
-      </div>
-    </div>
-
-    <button class="lbtn" onclick="doLogin()">Sign In</button>
-
-    <button class="lbtn lbtn-ghost" onclick="doBiometricLogin()">
-      <span style="font-size:16px">&#128065;</span> Face ID / Biometric Login
-    </button>
-
-    <div class="lnote">&#128274; This system is for <strong>Asterwix staff only</strong>. Unauthorised access is prohibited.</div>
-    <div class="llink" onclick="showForgot()">Having trouble? Reset password</div>
+    <div class="lnote">&#128274; This system is for <strong>Asterwix staff only</strong>. Sign in with your Asterwix Microsoft 365 account. Unauthorised access is prohibited.</div>
   </div>
 </div>
 

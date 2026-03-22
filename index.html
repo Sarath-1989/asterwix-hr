@@ -336,6 +336,7 @@ tbody td{padding:10px 12px;font-size:13px;color:var(--t2);vertical-align:middle}
 .ldot.ok{background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2)}
 .ldot.warn{background:#f59e0b}.ldot.danger{background:#ef4444}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes msPulse{0%,100%{box-shadow:0 4px 20px rgba(26,35,50,0.25)}50%{box-shadow:0 0 0 6px rgba(0,120,212,0.35),0 4px 20px rgba(26,35,50,0.25)}}
 .blink{animation:blink 1.2s infinite}
 .dist-row{padding:11px 14px;border-top:1px solid var(--bord);display:flex;align-items:center;gap:12px}
 .dring{width:70px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;flex-shrink:0}
@@ -2359,6 +2360,9 @@ document.getElementById("new-pw") && document.getElementById("new-pw").addEventL
 });
 
 // ── USERNAME/PASSWORD LOGIN ──
+// ── Roles that MUST use Microsoft 365 login ──────────────────
+var MS365_REQUIRED_ROLES = ["hr", "superadmin", "manager", "accountant"];
+
 function doLogin() {
   var username = (document.getElementById("l-user").value || "").trim().toLowerCase();
   var password = document.getElementById("l-pass").value || "";
@@ -2387,7 +2391,22 @@ function doLogin() {
     return;
   }
 
-  // ── Success ──
+  // ── 🔒 HR / Admin / Manager roles MUST use Microsoft 365 ──
+  if (MS365_REQUIRED_ROLES.indexOf(user.role) !== -1) {
+    secRecordAttempt(username, false);
+    errEl.innerHTML = "🔒 <strong>" + escHtml(user.name) + "</strong> — Your role requires <strong>Microsoft 365 login</strong>.<br>Please use the <em>Sign in with Microsoft 365</em> button above.";
+    errEl.classList.add("on");
+    // Highlight MS button
+    var msBtn = document.querySelector(".ms-btn");
+    if (msBtn) {
+      msBtn.style.animation = "msPulse .6s ease 3";
+      msBtn.style.boxShadow = "0 0 0 4px rgba(0,120,212,0.4)";
+      setTimeout(function(){ msBtn.style.boxShadow = ""; }, 2000);
+    }
+    return;
+  }
+
+  // ── Success (employee / other roles) ──
   secRecordAttempt(username, true);
   loginVia = "pw";
   if (user.mustReset) {
@@ -2403,38 +2422,46 @@ function doLogin() {
 }
 
 // ── MICROSOFT 365 LOGIN ──
-function doMSLogin() {
+async function doMSLogin() {
   showScreen("scr-ms");
   var sub = document.getElementById("ms-sub");
-  var steps = [
-    "Redirecting to Microsoft login...",
-    "Authenticating with Azure AD...",
-    "Verifying Asterwix tenant...",
-    "Fetching user profile..."
-  ];
-  var i = 0;
-  var interval = setInterval(function(){
-    if (i < steps.length) {
-      if (sub) sub.textContent = steps[i];
-      i++;
-    } else {
-      clearInterval(interval);
-      // Simulate finding user by MS365 email
-      // In production: use MSAL.js with real Azure AD app
-      var msEmail = "hr.admin@asterwix.com"; // simulated SSO response
-      var foundUser = null;
+  if (sub) sub.textContent = "Redirecting to Microsoft login...";
+  try {
+    if (!msalApp) { initMSALApp(); await new Promise(function(r){ setTimeout(r,700); }); }
+    if (!msalApp) throw new Error("MSAL not initialized. Please refresh and try again.");
+    var resp = await msalApp.loginPopup({ scopes: GRAPH_CFG.scopes });
+    if (sub) sub.textContent = "Verifying Asterwix account...";
+    graphToken = resp.accessToken;
+    var msEmail = resp.account ? (resp.account.username || "").toLowerCase() : "";
+    // Match by ms365 email field
+    var foundUser = null;
+    Object.keys(USERS).forEach(function(k){
+      if (USERS[k].ms365 && USERS[k].ms365.toLowerCase() === msEmail) foundUser = k;
+    });
+    // Also try matching primary email
+    if (!foundUser) {
       Object.keys(USERS).forEach(function(k){
-        if (USERS[k].ms365 === msEmail) foundUser = k;
+        if (USERS[k].email && USERS[k].email.toLowerCase() === msEmail) foundUser = k;
       });
-      if (foundUser) {
-        loginVia = "ms365";
-        finishLogin(foundUser);
-      } else {
-        showScreen("scr-login");
-        showToast("Microsoft account not linked to any user.", "danger");
-      }
     }
-  }, 700);
+    if (foundUser) {
+      loginVia = "ms365";
+      showScreen("scr-login");
+      finishLogin(foundUser);
+    } else {
+      showScreen("scr-login");
+      var errEl = document.getElementById("login-err");
+      errEl.textContent = "Microsoft account (" + msEmail + ") is not linked to any HR Portal user. Contact your admin.";
+      errEl.classList.add("on");
+    }
+  } catch(e) {
+    showScreen("scr-login");
+    if (e.errorCode !== "user_cancelled") {
+      var errEl = document.getElementById("login-err");
+      errEl.textContent = "Microsoft login failed: " + (e.message || e.errorCode || "Unknown error");
+      errEl.classList.add("on");
+    }
+  }
 }
 
 function cancelMS() {

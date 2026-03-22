@@ -1261,6 +1261,66 @@ input:checked+.slider:before{transform:translateX(18px)}
   </div>
 </div>
 
+
+<!-- EDIT USER MODAL -->
+<div class="mover" id="m-edit-user" onclick="if(event.target===this)closeM('m-edit-user')">
+  <div class="mbox" style="width:560px">
+    <div class="mhdr">
+      <div class="mtitle">✏️ Edit User — <span id="eu-uname-display" style="font-family:monospace;font-size:13px;color:var(--mu)"></span></div>
+      <button class="mcls" onclick="closeM('m-edit-user')">&#10005;</button>
+    </div>
+    <div class="mbody">
+      <div class="frow">
+        <div class="fld"><label>Full Name *</label><input id="eu-name" placeholder="e.g. Ahmed Al Mansouri"></div>
+        <div class="fld"><label>Email *</label><input id="eu-email" type="email" placeholder="ahmed@asterwix.com"></div>
+      </div>
+      <div class="frow">
+        <div class="fld"><label>Department</label><input id="eu-dept" placeholder="e.g. BIM"></div>
+        <div class="fld"><label>Microsoft 365 Email</label><input id="eu-ms365" placeholder="ahmed@asterwix.com"></div>
+      </div>
+      <div class="frow">
+        <div class="fld"><label>Role</label>
+          <select id="eu-role" onchange="var r=this.value;var mr=document.getElementById('eu-mgr-row');if(mr)mr.style.display=r==='manager'?'':'none';">
+            <option value="employee">Employee</option>
+            <option value="manager">Manager</option>
+            <option value="hr">HR Admin</option>
+            <option value="accountant">Accountant</option>
+          </select>
+        </div>
+        <div class="fld" id="eu-mgr-row" style="display:none"><label>Manager Type</label>
+          <select id="eu-mgr-type">
+            <option value="">— Select —</option>
+            <option value="BIM Manager">BIM Manager</option>
+            <option value="Design Manager">Design Manager</option>
+            <option value="MEP Manager">MEP Manager</option>
+            <option value="Project Manager">Project Manager</option>
+            <option value="Operations Manager">Operations Manager</option>
+          </select>
+        </div>
+      </div>
+      <div class="frow">
+        <div class="fld"><label>Location</label>
+          <select id="eu-location">
+            <option value="UAE">🇦🇪 UAE</option>
+            <option value="India">🇮🇳 India</option>
+          </select>
+        </div>
+        <div class="fld"><label>Currency</label>
+          <select id="eu-currency">
+            <option value="AED">AED</option>
+            <option value="INR">INR ₹</option>
+          </select>
+        </div>
+      </div>
+      <div class="alert alblue" style="margin-top:4px"><span>ℹ️</span><div>Username and password are managed separately. Use <strong>Reset PW</strong> to change the password.</div></div>
+    </div>
+    <div class="mfoot">
+      <button class="btn bghost" onclick="closeM('m-edit-user')">Cancel</button>
+      <button class="btn bdark" onclick="saveEditUser()">💾 Save Changes</button>
+    </div>
+  </div>
+</div>
+
 <!-- RESET PASSWORD MODAL (Admin) -->
 <div class="mover" id="m-reset-pw" onclick="if(event.target===this)closeM(&#39;m-reset-pw&#39;)">
   <div class="mbox" style="width:420px"><div class="mhdr"><div class="mtitle">Reset Password</div><button class="mcls" onclick="closeM(&#39;m-reset-pw&#39;)">&#10005;</button></div>
@@ -1302,7 +1362,7 @@ if (typeof msal === "undefined") {
 //  GRAPH API CONFIG — Asterwix HR Portal
 // ══════════════════════════════════════════════════════════════
 var GRAPH_CFG = {
-  clientId:   "5131ffb0-4953-4aae-9886-97f8a52af3bd",
+  clientId:   "3288756f-da5c-4177-85ba-b5a29d98da89",
   tenantId:   "16522c0a-f9da-4e67-ac59-ed6adea4e80e",
   siteUrl:    "https://asterwix007.sharepoint.com/sites/AsterwixBIMHub",
   scopes:     ["https://graph.microsoft.com/Sites.ReadWrite.All",
@@ -2765,8 +2825,9 @@ function renderUsers() {
     html += "<td style=\"display:flex;gap:5px;padding:10px 12px;flex-wrap:wrap\">";
     var canManage = (getCurrentRole()==='superadmin'||getCurrentRole()==='hr');
     if(canManage){
-    html += "<button class=\"btn bdark bsm\" data-u=\"" + uname + "\" onclick=\"openResetPw(this.dataset.u)\">Reset PW</button>";
-    html += "<button class=\"btn bghost bsm\" data-u=\"" + uname + "\" onclick=\"toggleUserActive(this.dataset.u)\">" + (u.active ? "Disable" : "Enable") + "</button>";
+    html += "<button class=\"btn bdark bsm\" data-u=\"" + uname + "\" onclick=\"openEditUser(this.dataset.u)\">✏️ Edit</button>";
+    html += "<button class=\"btn bghost bsm\" data-u=\"" + uname + "\" onclick=\"openResetPw(this.dataset.u)\">🔑 Reset PW</button>";
+    html += "<button class=\"btn " + (u.active?"bdanger2":"bok2") + " bsm\" data-u=\"" + uname + "\" onclick=\"toggleUserActive(this.dataset.u)\">" + (u.active ? "Disable" : "Enable") + "</button>";
     }
     html += "</td>";
 
@@ -2774,6 +2835,119 @@ function renderUsers() {
     tbody.appendChild(tr);
   });
 }
+
+// ── User Management Functions ─────────────────────────────────
+
+// Reveal / hide password in user table
+function revealPw(uname, btn) {
+  var span = document.getElementById('pw-' + uname);
+  if (!span) return;
+  var u = USERS[uname];
+  if (!u) return;
+  if (span.dataset.revealed === '1') {
+    span.textContent = '••••••••';
+    span.dataset.revealed = '0';
+    btn.innerHTML = '&#128065;';
+    btn.title = 'Show password';
+  } else {
+    span.textContent = u.pwHash;
+    span.dataset.revealed = '1';
+    btn.innerHTML = '&#128683;';
+    btn.title = 'Hide password';
+  }
+}
+
+// Open Reset Password modal
+function openResetPw(uname) {
+  var u = USERS[uname];
+  if (!u) return;
+  var lbl = document.getElementById('reset-for-name');
+  if (lbl) lbl.textContent = 'Resetting password for: ' + u.name + ' (' + uname + ')';
+  var inp = document.getElementById('admin-new-pw');
+  if (inp) inp.value = '';
+  var cb = document.getElementById('reset-must-change');
+  if (cb) cb.checked = true;
+  // Store target username
+  var modal = document.getElementById('m-reset-pw');
+  if (modal) modal.dataset.targetUser = uname;
+  openM('m-reset-pw');
+}
+
+// Execute password reset
+function adminResetPassword() {
+  var modal = document.getElementById('m-reset-pw');
+  var uname = modal ? modal.dataset.targetUser : '';
+  if (!uname || !USERS[uname]) { showToast('User not found.', 'danger'); return; }
+  var pw = (document.getElementById('admin-new-pw').value || '').trim();
+  if (!pw || pw.length < 8) { showToast('Password must be at least 8 characters.', 'danger'); return; }
+  var mustChange = document.getElementById('reset-must-change').checked;
+  USERS[uname].pwHash = pw;
+  USERS[uname].mustReset = mustChange;
+  // Hide any revealed password
+  var span = document.getElementById('pw-' + uname);
+  if (span) { span.textContent = '••••••••'; span.dataset.revealed = '0'; }
+  closeM('m-reset-pw');
+  renderUsers();
+  showToast('Password reset for ' + escHtml(USERS[uname].name) + ' ✓', 'ok');
+}
+
+// Toggle user active/inactive
+function toggleUserActive(uname) {
+  var u = USERS[uname];
+  if (!u) return;
+  if (uname === 'superadmin') { showToast('Cannot disable Super Admin.', 'danger'); return; }
+  if (window.CU && window.CU.username === uname) { showToast('Cannot disable your own account.', 'danger'); return; }
+  u.active = !u.active;
+  renderUsers();
+  showToast(escHtml(u.name) + (u.active ? ' enabled ✓' : ' disabled'), u.active ? 'ok' : '');
+}
+
+// Open Edit User modal
+function openEditUser(uname) {
+  var u = USERS[uname];
+  if (!u) return;
+  document.getElementById('eu-uname-display').textContent = uname;
+  document.getElementById('eu-name').value = u.name || '';
+  document.getElementById('eu-email').value = u.email || '';
+  document.getElementById('eu-dept').value = u.dept || '';
+  document.getElementById('eu-ms365').value = u.ms365 || '';
+  document.getElementById('eu-role').value = u.role || 'employee';
+  document.getElementById('eu-location').value = u.location || 'UAE';
+  document.getElementById('eu-currency').value = u.currency || 'AED';
+  var mgr = document.getElementById('eu-mgr-row');
+  if (mgr) mgr.style.display = u.role === 'manager' ? '' : 'none';
+  document.getElementById('eu-mgr-type').value = u.managerType || '';
+  var modal = document.getElementById('m-edit-user');
+  if (modal) modal.dataset.targetUser = uname;
+  openM('m-edit-user');
+}
+
+// Save edited user
+function saveEditUser() {
+  var modal = document.getElementById('m-edit-user');
+  var uname = modal ? modal.dataset.targetUser : '';
+  if (!uname || !USERS[uname]) { showToast('User not found.', 'danger'); return; }
+  var u = USERS[uname];
+  var name  = (document.getElementById('eu-name').value || '').trim();
+  var email = (document.getElementById('eu-email').value || '').trim();
+  var dept  = (document.getElementById('eu-dept').value || '').trim();
+  var ms365 = (document.getElementById('eu-ms365').value || '').trim();
+  var role  = document.getElementById('eu-role').value;
+  var loc   = document.getElementById('eu-location').value;
+  var cur   = document.getElementById('eu-currency').value;
+  var mgrT  = role === 'manager' ? (document.getElementById('eu-mgr-type').value || '') : '';
+  if (!name || !email) { showToast('Name and Email are required.', 'danger'); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Invalid email format.', 'danger'); return; }
+  // Prevent demoting superadmin
+  if (uname === 'superadmin' && role !== 'superadmin') { showToast('Cannot change Super Admin role.', 'danger'); return; }
+  u.name = name; u.email = email; u.dept = dept;
+  u.ms365 = ms365; u.role = role; u.location = loc;
+  u.currency = cur; u.managerType = mgrT;
+  closeM('m-edit-user');
+  renderUsers();
+  showToast(escHtml(name) + ' updated ✓', 'ok');
+}
+
 // ── CLOCK ──
 function startClock() {
   if (clockTmr) clearInterval(clockTmr);
@@ -3655,10 +3829,47 @@ function updateEmpSalaryCurrency(location){
   else{if(cs)cs.value='AED';if(sl)sl.textContent='Basic Salary (AED)';if(ol)ol.textContent='OT Rate/hr (AED)';if(nt)nt.style.display='none';if(si)si.placeholder='8500';if(oi)oi.placeholder='50';}
 }
 function saveNewEmployee(){
-  var loc=document.getElementById('emp-location'),cur=document.getElementById('emp-currency');
-  var lv=loc?loc.value:'UAE',cv=cur?cur.value:'AED';
+  // Collect all fields from the Add Employee modal
+  var fn    = (document.querySelector('#m-emp input[placeholder="Ahmed"]')    || {}).value || '';
+  var ln    = (document.querySelector('#m-emp input[placeholder="Al Mansouri"]') || {}).value || '';
+  var email = (document.querySelector('#m-emp input[type="email"]')            || {}).value || '';
+  var phone = (document.querySelector('#m-emp input[placeholder="+971 50 000 0000"]') || {}).value || '';
+  var empId = (document.querySelector('#m-emp input[value^="AWX"]')            || {}).value || '';
+  var dept  = (document.querySelector('#m-emp select option:checked')          || {}).textContent || '';
+  var desig = (document.querySelector('#m-emp input[placeholder="BIM Engineer"]') || {}).value || '';
+  var jdate = (document.querySelector('#m-emp input[type="date"]')             || {}).value || '';
+  var loc   = document.getElementById('emp-location');
+  var cur   = document.getElementById('emp-currency');
+  var sal   = document.getElementById('emp-salary');
+  var lv    = loc  ? loc.value  : 'UAE';
+  var cv    = cur  ? cur.value  : 'AED';
+  var salv  = sal  ? parseFloat(sal.value) || 0 : 0;
+
+  var fullName = (fn + ' ' + ln).trim() || 'New Employee';
+
+  // Save to SharePoint Employees list (shared with BIM Hub)
+  spAddItem('Employees', {
+    EmployeeID:   empId   || ('AWX-' + Date.now().toString().slice(-4)),
+    FullName:     fullName,
+    Email:        email,
+    Department:   dept,
+    Designation:  desig,
+    Location:     lv,
+    Currency:     cv,
+    JoinDate:     jdate ? new Date(jdate).toISOString() : new Date().toISOString(),
+    BasicSalary:  salv,
+    Status:       'Active',
+    BIMRole:      '',
+    ManagerType:  ''
+  }).then(function(){
+    showToast(fullName + ' saved to SharePoint \u2714', 'ok');
+  }).catch(function(e){
+    console.error('SP Employee save error:', e);
+    showToast(fullName + ' saved locally (SP sync pending)', '');
+  });
+
   closeM('m-emp');
-  showToast('Employee saved \u2014 '+lv+' \u2014 '+cv+' \u2713','ok');
+  showToast('Employee saved \u2014 ' + lv + ' \u2014 ' + cv + ' \u2713', 'ok');
 }
 </script>
 </html>

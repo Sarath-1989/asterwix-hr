@@ -312,7 +312,7 @@ tbody td{padding:10px 12px;font-size:13px;color:var(--t2);vertical-align:middle}
 #toast.danger{background:#b91c1c}
 
 /* MAP */
-#ci-map{height:200px;border-radius:12px;overflow:hidden;margin-bottom:12px}
+#ci-map{height:200px;border-radius:12px;overflow:hidden;margin-bottom:12px;background:#f0f2f5;}
 #admin-map{height:240px;border-radius:12px;overflow:hidden;margin-bottom:12px}
 
 /* CHECKIN */
@@ -889,7 +889,7 @@ input:checked+.slider:before{transform:translateX(18px)}
                 <input type="file" id="id-doc-upload" accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="handleIDUpload(this)">
               </div>
               <div id="id-doc-preview" style="display:none;margin-top:10px;padding:10px 12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:12px;color:#166534;font-weight:600">
-                &#10003; <span id="id-doc-name">Document uploaded</span>
+                ✓ <span id="id-doc-name">Document uploaded</span>
                 <button onclick="removeIDDoc()" style="float:right;border:none;background:none;color:#b91c1c;cursor:pointer;font-size:12px">&#10005; Remove</button>
               </div>
             </div>
@@ -1014,7 +1014,7 @@ input:checked+.slider:before{transform:translateX(18px)}
       </div>
       <div class="punch-wrap">
         <button class="punch-btn pin" id="punch-btn" onclick="doPunch()">
-          <span class="pico">&#10003;</span>
+          <span class="pico">✓</span>
           <span id="punch-lbl">CHECK IN</span>
         </button>
         <div class="phint" id="punch-hint">Tap to record attendance</div>
@@ -1047,7 +1047,7 @@ input:checked+.slider:before{transform:translateX(18px)}
         <div class="cbody">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
             <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px">
-              <div style="font-size:11px;font-weight:800;color:#166534;margin-bottom:4px">&#10003; DEVICE LOCK</div>
+              <div style="font-size:11px;font-weight:800;color:#166534;margin-bottom:4px">✓ DEVICE LOCK</div>
               <div style="font-size:11px;color:#166534">1 device per employee. New device needs Admin approval.</div>
             </div>
             <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px">
@@ -2705,16 +2705,25 @@ function switchTab(group, id, el) {
 // ── GPS / MAP ──
 function initCiMap() {
   if(!leafletReady()){
-    // Show a styled placeholder map when Leaflet can't load
     var el = document.getElementById("ci-map");
     if(el && !el.dataset.placeholder){
       el.dataset.placeholder = "1";
-      el.style.cssText = "height:200px;border-radius:12px;overflow:hidden;margin-bottom:12px;background:linear-gradient(135deg,#e8f4f0 0%,#d4ede7 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;border:1.5px solid #b2d8d0;";
-      el.innerHTML = '<div style="text-align:center;color:#3d4f63;font-family:Nunito Sans,sans-serif;">'
-        + '<div style="font-size:32px;margin-bottom:8px">🗺️</div>'
-        + '<div style="font-size:13px;font-weight:700;color:#1a2332">Map loads when opened in browser</div>'
-        + '<div style="font-size:11px;color:#7a8fa8;margin-top:4px">OpenStreetMap · Office: Dubai, UAE</div>'
-        + '<div style="margin-top:10px;background:#00b899;color:#fff;padding:4px 14px;border-radius:20px;font-size:11px;font-weight:700;display:inline-block">📍 GPS active in browser</div>'
+      el.style.height = "200px";
+      el.style.borderRadius = "12px";
+      el.style.marginBottom = "12px";
+      el.style.background = "linear-gradient(135deg,#1a2332 0%,#243448 100%)";
+      el.style.display = "flex";
+      el.style.flexDirection = "column";
+      el.style.alignItems = "center";
+      el.style.justifyContent = "center";
+      el.style.overflow = "hidden";
+      el.style.border = "1px solid rgba(255,255,255,0.08)";
+      el.innerHTML = '<div style="text-align:center;font-family:Nunito Sans,sans-serif;padding:20px;">'
+        + '<div style="font-size:40px;margin-bottom:10px;filter:grayscale(0.2)">🗺️</div>'
+        + '<div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:4px">Interactive Map</div>'
+        + '<div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:12px">OpenStreetMap · Office: Dubai, UAE</div>'
+        + '<div style="background:#00b899;color:#fff;padding:6px 16px;border-radius:20px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:6px;">'
+        + '<span>📍</span><span>Live map available in browser</span></div>'
         + '</div>';
     }
     return;
@@ -2737,12 +2746,22 @@ function initAdminMap() {
     var el = document.getElementById("admin-map");
     if(el && !el.dataset.placeholder){
       el.dataset.placeholder = "1";
-      el.style.cssText = "height:240px;border-radius:12px;overflow:hidden;margin-bottom:12px;background:linear-gradient(135deg,#e8f4f0 0%,#d4ede7 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;border:1.5px solid #b2d8d0;";
-      el.innerHTML = '<div style="text-align:center;color:#3d4f63;font-family:Nunito Sans,sans-serif;">'
-        + '<div style="font-size:32px;margin-bottom:8px">🗺️</div>'
-        + '<div style="font-size:13px;font-weight:700;color:#1a2332">Office location map</div>'
-        + '<div style="font-size:11px;color:#7a8fa8;margin-top:4px">Drag pin to update office location</div>'
-        + '<div style="margin-top:10px;background:#1a2332;color:#fff;padding:4px 14px;border-radius:20px;font-size:11px;font-weight:700;display:inline-block">🌐 Opens in browser</div>'
+      el.style.height = "240px";
+      el.style.borderRadius = "12px";
+      el.style.marginBottom = "12px";
+      el.style.background = "linear-gradient(135deg,#1a2332 0%,#243448 100%)";
+      el.style.display = "flex";
+      el.style.flexDirection = "column";
+      el.style.alignItems = "center";
+      el.style.justifyContent = "center";
+      el.style.overflow = "hidden";
+      el.style.border = "1px solid rgba(255,255,255,0.08)";
+      el.innerHTML = '<div style="text-align:center;font-family:Nunito Sans,sans-serif;padding:20px;">'
+        + '<div style="font-size:40px;margin-bottom:10px">🗺️</div>'
+        + '<div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:4px">Office Location Map</div>'
+        + '<div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:12px">Drag pin to set office location</div>'
+        + '<div style="background:#00b899;color:#fff;padding:6px 16px;border-radius:20px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:6px;">'
+        + '<span>📍</span><span>Live map available in browser</span></div>'
         + '</div>';
     }
     return;
@@ -2819,7 +2838,7 @@ function useDemoGPS() {
   var el = document.getElementById("loc-coords"); if (el) el.textContent = "Demo mode (GPS simulated)";
 }
 function updateUserMarker() {
-  if(!leafletReady()){console.warn("Leaflet not loaded, map disabled");return;}
+  if(!leafletReady()){/* Leaflet unavailable in preview — map placeholder shown */return;}
   try{
 
   if (!ciMap) return;
@@ -2901,7 +2920,7 @@ function doPunch() {
     var hrs = Math.floor(diff/60), mins = diff%60;
     if (btn) btn.className = "punch-btn pin";
     if (lbl) lbl.textContent = "CHECK IN";
-    if (ico) ico.textContent = "&#10003;";
+    if (ico) ico.textContent = "✓";
     if (st) st.textContent = "Checked Out";
     if (ct) ct.textContent = punchInTime + " to " + t + " - " + hrs + "h " + mins + "m";
     showToast("Check Out at " + t + " - " + hrs + "h " + mins + "m", "ok");

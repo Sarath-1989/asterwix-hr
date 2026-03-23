@@ -1383,6 +1383,28 @@ window.addEventListener("load", async function() {
       if (resp && resp.accessToken) {
         graphToken = resp.accessToken;
         console.log("MSAL redirect token received ✓");
+        // Complete the login flow after mobile redirect
+        var msEmail = resp.account ? (resp.account.username || "").toLowerCase() : "";
+        var foundUser = null;
+        Object.keys(USERS).forEach(function(k){
+          if (USERS[k].ms365 && USERS[k].ms365.toLowerCase() === msEmail) foundUser = k;
+        });
+        if (!foundUser) {
+          Object.keys(USERS).forEach(function(k){
+            if (USERS[k].email && USERS[k].email.toLowerCase() === msEmail) foundUser = k;
+          });
+        }
+        if (foundUser) {
+          loginVia = "ms365";
+          finishLogin(foundUser);
+        } else {
+          showScreen("scr-login");
+          var errEl = document.getElementById("login-err");
+          if (errEl) {
+            errEl.textContent = "Microsoft account (" + msEmail + ") is not linked to any HR Portal user. Contact your admin.";
+            errEl.classList.add("on");
+          }
+        }
       }
     } catch(e) {
       console.warn("MSAL redirect error:", e.message);
@@ -2399,6 +2421,10 @@ function doLogin() {
 }
 
 // ── MICROSOFT 365 LOGIN ──
+function isMobileBrowser() {
+  return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
+}
+
 async function doMSLogin() {
   showScreen("scr-ms");
   var sub = document.getElementById("ms-sub");
@@ -2406,6 +2432,13 @@ async function doMSLogin() {
   try {
     if (!msalApp) { initMSALApp(); await new Promise(function(r){ setTimeout(r,700); }); }
     if (!msalApp) throw new Error("MSAL not initialized. Please refresh and try again.");
+
+    // On mobile, use redirect flow to avoid block_nested_popups error
+    if (isMobileBrowser()) {
+      await msalApp.loginRedirect({ scopes: GRAPH_CFG.scopes });
+      return; // Page will reload after redirect; handleRedirectPromise() handles the response
+    }
+
     var resp = await msalApp.loginPopup({ scopes: GRAPH_CFG.scopes });
     if (sub) sub.textContent = "Verifying Asterwix account...";
     graphToken = resp.accessToken;

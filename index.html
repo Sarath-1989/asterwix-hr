@@ -1111,6 +1111,101 @@ input:checked+.slider:before{transform:translateX(18px)}
       </div>
     </div>
 
+    <!-- SHAREPOINT CONFIG — SUPERADMIN ONLY -->
+    <div class="page" id="pg-spconfig">
+      <div class="phdr">
+        <div>
+          <div class="ptitle">&#9729; SharePoint Config</div>
+          <div class="psub">Azure AD &amp; SharePoint connection — Admin access only</div>
+        </div>
+        <span class="badge" style="background:#ef4444;color:#fff;font-size:10px;font-weight:800;padding:4px 10px;border-radius:5px;letter-spacing:.5px">&#128274; SUPER ADMIN</span>
+      </div>
+
+      <!-- Status Bar -->
+      <div id="sp-status-bar" style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:16px">
+        <div id="sp-status-dot" style="width:10px;height:10px;border-radius:50%;background:#e2e8f0;flex-shrink:0"></div>
+        <div id="sp-status-text" style="font-size:12px;font-weight:700;color:var(--muted)">Not tested — click Test Connection to verify.</div>
+        <button class="btn bghost" style="margin-left:auto;font-size:11px;padding:5px 12px" onclick="testSPConnection()">&#9654; Test Connection</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+
+        <!-- Azure AD Card -->
+        <div class="card">
+          <div class="chdr" style="background:#1a2332;color:#fff">
+            <div class="ctitle" style="color:#fff">&#9729; Azure AD Application</div>
+          </div>
+          <div class="cbody" style="display:grid;gap:14px">
+            <div class="fld">
+              <label style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.5px;text-transform:uppercase">Client ID</label>
+              <div style="position:relative;margin-top:4px">
+                <input id="cfg-clientId" class="finput" style="width:100%;font-family:'JetBrains Mono',monospace;font-size:12px;padding-right:36px" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+                <button onclick="toggleCfgVis('cfg-clientId',this)" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:14px;color:var(--muted)">&#128065;</button>
+              </div>
+            </div>
+            <div class="fld">
+              <label style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.5px;text-transform:uppercase">Tenant ID</label>
+              <div style="position:relative;margin-top:4px">
+                <input id="cfg-tenantId" class="finput" style="width:100%;font-family:'JetBrains Mono',monospace;font-size:12px;padding-right:36px" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+                <button onclick="toggleCfgVis('cfg-tenantId',this)" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:14px;color:var(--muted)">&#128065;</button>
+              </div>
+            </div>
+            <div class="fld">
+              <label style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.5px;text-transform:uppercase">Redirect URI</label>
+              <input id="cfg-redirectUri" class="finput" style="width:100%;font-family:'JetBrains Mono',monospace;font-size:12px;margin-top:4px" placeholder="https://hr.asterwix.com">
+            </div>
+            <div class="fld">
+              <label style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.5px;text-transform:uppercase">Scopes</label>
+              <textarea id="cfg-scopes" class="finput" rows="3" style="width:100%;font-family:'JetBrains Mono',monospace;font-size:11px;margin-top:4px;resize:vertical" placeholder="https://graph.microsoft.com/Sites.ReadWrite.All"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- SharePoint Card -->
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="card">
+            <div class="chdr" style="background:#0078d4;color:#fff">
+              <div class="ctitle" style="color:#fff">&#128279; SharePoint Site</div>
+            </div>
+            <div class="cbody" style="display:grid;gap:14px">
+              <div class="fld">
+                <label style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.5px;text-transform:uppercase">Site URL</label>
+                <input id="cfg-siteUrl" class="finput" style="width:100%;font-family:'JetBrains Mono',monospace;font-size:11px;margin-top:4px" placeholder="https://tenant.sharepoint.com/sites/SiteName">
+              </div>
+              <div class="fld">
+                <label style="font-size:11px;font-weight:800;color:var(--muted);letter-spacing:.5px;text-transform:uppercase">Site ID <span style="font-weight:500;color:var(--muted)">(auto-detected)</span></label>
+                <input id="cfg-siteId" class="finput" style="width:100%;font-family:'JetBrains Mono',monospace;font-size:10px;background:#f8f9fb;color:var(--muted);margin-top:4px" readonly placeholder="Populated after Test Connection">
+              </div>
+            </div>
+          </div>
+
+          <!-- Required Lists Card -->
+          <div class="card">
+            <div class="chdr"><div class="ctitle">&#128196; Required SharePoint Lists</div></div>
+            <div class="cbody">
+              <div id="sp-lists-status" style="display:grid;gap:8px">
+                <div style="font-size:11px;color:var(--muted)">Run Test Connection to verify lists.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Last Saved -->
+          <div style="background:#f8f9fb;border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:11px;color:var(--muted)">
+            <div style="font-weight:800;color:var(--text);margin-bottom:4px">&#128336; Last Saved</div>
+            <div id="sp-last-saved">Never — using default config from source.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+        <button class="btn bdark" style="min-width:140px" onclick="saveSPConfig()">&#128190; Save Config</button>
+        <button class="btn bghost" onclick="loadSPConfigUI()">&#8635; Reset to Current</button>
+        <button class="btn" style="background:#fef2f2;border:1px solid #fca5a5;color:#b91c1c" onclick="clearSPConfigOverride()">&#128465; Clear Override</button>
+      </div>
+      <div id="sp-cfg-msg" style="margin-top:12px;font-size:12px;font-weight:700;color:var(--ok);display:none">&#10003; Config saved successfully — reload page to reconnect with new credentials.</div>
+    </div>
+
   </div><!-- /main -->
 </div><!-- /APP -->
 
@@ -1675,6 +1770,7 @@ var FULL_HR_NAV = [
   {id:"users",      lbl:"User Management",    ico:"&#128273;"},
   {id:"checkin",    lbl:"GPS Check-In",       ico:"&#128205;"},
   {id:"admin",      lbl:"Admin Settings",     ico:"&#9881;"},
+  {id:"spconfig",   lbl:"SharePoint Config",  ico:"&#9729;"},
   {sec:"Reports"},
   {id:"reports",    lbl:"Reports",            ico:"&#128202;"}
 ];
@@ -2685,6 +2781,11 @@ function buildNav(cfg) {
     nav.querySelectorAll(".ni").forEach(function(el){
       el.addEventListener("click", function(){ goPage(this.getAttribute("data-pg")); });
     });
+    // Hide SharePoint Config nav item from non-superadmin
+    var spNavItem = document.getElementById("ni-spconfig");
+    if (spNavItem && cfg && cfg !== ROLE_CFG.superadmin) {
+      spNavItem.style.display = "none";
+    }
   }
 }
 
@@ -2722,7 +2823,7 @@ function goPage(id) {
     leave:"Leave Management", overtime:"Overtime", payroll:"Payroll Processing",
     tax:"Tax Management", payslips:"Payslips", reports:"Reports",
     users:"User Management", checkin:"GPS Check-In", admin:"Admin Settings",
-    profile:"My Profile"
+    profile:"My Profile", spconfig:"SharePoint Config"
   };
   var t = document.getElementById("pg-title");
   if (t) t.textContent = titles[id] || id;
@@ -2733,6 +2834,7 @@ function goPage(id) {
   if (id === "profile")  { setTimeout(function(){ initProfilePage(); }, 100); }
   if (id === "admin" && adminMap) { setTimeout(function(){ adminMap.invalidateSize(); }, 150); }
   if (id === "admin") { setTimeout(renderDeviceApprovals, 400); }
+  if (id === "spconfig") { guardSPConfig(); loadSPConfigUI(); }
   closeMob();
   window.scrollTo(0, 0);
   // Push history so back button goes to previous page
@@ -3908,5 +4010,143 @@ function saveNewEmployee(){
   closeM('m-emp');
   showToast('Employee saved \u2014 ' + lv + ' \u2014 ' + cv + ' \u2713', 'ok');
 }
-</script>
-</html>
+// ══════════════════════════════════════════════════════════════
+//  SHAREPOINT CONFIG PAGE — Superadmin only
+// ══════════════════════════════════════════════════════════════
+
+// Apply any saved override on startup
+(function(){
+  try {
+    var ov = localStorage.getItem('sp_cfg_override');
+    if (ov) { var o = JSON.parse(ov); Object.assign(GRAPH_CFG, o); }
+  } catch(e){}
+})();
+
+function guardSPConfig() {
+  var role = getCurrentRole ? getCurrentRole() : '';
+  if (role !== 'superadmin') {
+    showToast('Access denied — Super Admin only.', 'danger');
+    goPage('dash');
+  }
+}
+
+function loadSPConfigUI() {
+  var el = function(id){ return document.getElementById(id); };
+  if (!el('cfg-clientId')) return;
+  el('cfg-clientId').value    = GRAPH_CFG.clientId  || '';
+  el('cfg-tenantId').value    = GRAPH_CFG.tenantId  || '';
+  el('cfg-siteUrl').value     = GRAPH_CFG.siteUrl   || '';
+  el('cfg-redirectUri').value = (msalApp && msalApp.config && msalApp.config.auth && msalApp.config.auth.redirectUri) || 'https://hr.asterwix.com';
+  el('cfg-scopes').value      = (GRAPH_CFG.scopes || []).join('\n');
+  if (spSiteId) el('cfg-siteId').value = spSiteId;
+  // Show last saved timestamp
+  var ts = localStorage.getItem('sp_cfg_saved_at');
+  el('sp-last-saved').textContent = ts ? 'Last saved: ' + ts : 'Never — using default config from source.';
+  resetSPStatusBar();
+}
+
+function saveSPConfig() {
+  var role = getCurrentRole ? getCurrentRole() : '';
+  if (role !== 'superadmin') { showToast('Admin only.', 'danger'); return; }
+  var el = function(id){ return document.getElementById(id); };
+  var clientId = (el('cfg-clientId').value || '').trim();
+  var tenantId = (el('cfg-tenantId').value || '').trim();
+  var siteUrl  = (el('cfg-siteUrl').value  || '').trim();
+  var scopes   = (el('cfg-scopes').value   || '').split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
+  if (!clientId || !tenantId || !siteUrl) {
+    showToast('Client ID, Tenant ID and Site URL are required.', 'danger'); return;
+  }
+  GRAPH_CFG.clientId = clientId;
+  GRAPH_CFG.tenantId = tenantId;
+  GRAPH_CFG.siteUrl  = siteUrl;
+  if (scopes.length) GRAPH_CFG.scopes = scopes;
+  var ts = new Date().toLocaleString('en-GB', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+  localStorage.setItem('sp_cfg_override', JSON.stringify({ clientId: clientId, tenantId: tenantId, siteUrl: siteUrl, scopes: GRAPH_CFG.scopes }));
+  localStorage.setItem('sp_cfg_saved_at', ts);
+  el('sp-last-saved').textContent = 'Last saved: ' + ts;
+  var msg = el('sp-cfg-msg');
+  msg.style.display = 'block';
+  setTimeout(function(){ msg.style.display = 'none'; }, 5000);
+  showToast('SharePoint config saved ✔', 'ok');
+}
+
+function clearSPConfigOverride() {
+  var role = getCurrentRole ? getCurrentRole() : '';
+  if (role !== 'superadmin') { showToast('Admin only.', 'danger'); return; }
+  localStorage.removeItem('sp_cfg_override');
+  localStorage.removeItem('sp_cfg_saved_at');
+  showToast('Config override cleared — reload to use source defaults.', '');
+  loadSPConfigUI();
+}
+
+function toggleCfgVis(inputId, btn) {
+  var inp = document.getElementById(inputId);
+  if (!inp) return;
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  btn.textContent = inp.type === 'password' ? '👁' : '🙈';
+}
+
+function resetSPStatusBar() {
+  var dot  = document.getElementById('sp-status-dot');
+  var txt  = document.getElementById('sp-status-text');
+  var lists = document.getElementById('sp-lists-status');
+  if (dot)  { dot.style.background  = '#e2e8f0'; }
+  if (txt)  { txt.style.color = 'var(--muted)'; txt.textContent = 'Not tested — click Test Connection to verify.'; }
+  if (lists){ lists.innerHTML = '<div style="font-size:11px;color:var(--muted)">Run Test Connection to verify lists.</div>'; }
+}
+
+async function testSPConnection() {
+  var dot  = document.getElementById('sp-status-dot');
+  var txt  = document.getElementById('sp-status-text');
+  var siteIdEl = document.getElementById('cfg-siteId');
+  var listsEl  = document.getElementById('sp-lists-status');
+  if (!dot || !txt) return;
+  dot.style.background  = '#f59e0b';
+  dot.style.animation   = 'pulse 1s infinite';
+  txt.style.color       = '#d97706';
+  txt.textContent       = 'Connecting to SharePoint…';
+  try {
+    var token = await getGraphToken();
+    var siteUrl = (document.getElementById('cfg-siteUrl') || {}).value || GRAPH_CFG.siteUrl;
+    var host    = siteUrl.replace('https://','').split('/')[0];
+    var path    = '/' + siteUrl.replace('https://','').split('/').slice(1).join('/');
+    var res     = await fetch('https://graph.microsoft.com/v1.0/sites/' + host + ':' + path, {
+      headers: { Authorization: 'Bearer ' + token }
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    var data    = await res.json();
+    spSiteId    = data.id;
+    if (siteIdEl) siteIdEl.value = spSiteId;
+    dot.style.background = '#00b899';
+    dot.style.animation  = '';
+    txt.style.color      = '#009980';
+    txt.textContent      = '✔ Connected — Site: ' + (data.displayName || siteUrl);
+    // Verify lists
+    var requiredLists = ['BIMProjects','BIMTasks','BIMMembers','BIMModelLogs','BIMDrawingLogs','BIMRecycleBin'];
+    var lHtml = '';
+    for (var i = 0; i < requiredLists.length; i++) {
+      var lName = requiredLists[i];
+      try {
+        var lr = await fetch('https://graph.microsoft.com/v1.0/sites/' + spSiteId + '/lists/' + lName, {
+          headers: { Authorization: 'Bearer ' + token }
+        });
+        var ok = lr.ok;
+        var optional = lName === 'BIMRecycleBin';
+        lHtml += '<div style="display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600">' +
+          '<span style="font-size:14px">' + (ok ? '✅' : optional ? '⚠️' : '❌') + '</span>' +
+          '<span style="font-family:\'JetBrains Mono\',monospace">' + lName + '</span>' +
+          '<span style="color:var(--muted);font-weight:400">' + (ok ? 'found' : optional ? 'not found (optional)' : 'MISSING') + '</span>' +
+        '</div>';
+      } catch(e) {
+        lHtml += '<div style="font-size:11px;color:#b91c1c;font-family:\'JetBrains Mono\',monospace">' + lName + ' — error</div>';
+      }
+    }
+    if (listsEl) listsEl.innerHTML = lHtml;
+  } catch(e) {
+    dot.style.background = '#ef4444';
+    dot.style.animation  = '';
+    txt.style.color      = '#b91c1c';
+    txt.textContent      = '✖ Connection failed — ' + (e.message || 'Unknown error');
+    showToast('SP connection failed: ' + e.message, 'danger');
+  }
+}

@@ -2783,7 +2783,8 @@ function buildNav(cfg) {
     });
     // Hide SharePoint Config nav item from non-superadmin
     var spNavItem = document.getElementById("ni-spconfig");
-    if (spNavItem && cfg && cfg !== ROLE_CFG.superadmin) {
+    var _spRole = getCurrentRole ? getCurrentRole() : (window.CU ? window.CU.role : '');
+    if (spNavItem && _spRole !== 'superadmin') {
       spNavItem.style.display = "none";
     }
   }
@@ -2834,7 +2835,14 @@ function goPage(id) {
   if (id === "profile")  { setTimeout(function(){ initProfilePage(); }, 100); }
   if (id === "admin" && adminMap) { setTimeout(function(){ adminMap.invalidateSize(); }, 150); }
   if (id === "admin") { setTimeout(renderDeviceApprovals, 400); }
-  if (id === "spconfig") { guardSPConfig(); loadSPConfigUI(); }
+  if (id === "spconfig") {
+    if ((getCurrentRole ? getCurrentRole() : '') !== 'superadmin') {
+      showToast('Access denied — Super Admin only.', 'danger');
+      goPage('dash');
+      return;
+    }
+    loadSPConfigUI();
+  }
   closeMob();
   window.scrollTo(0, 0);
   // Push history so back button goes to previous page
@@ -4032,7 +4040,13 @@ function guardSPConfig() {
 
 function loadSPConfigUI() {
   var el = function(id){ return document.getElementById(id); };
-  if (!el('cfg-clientId')) return;
+  if (!el('cfg-clientId')) {
+    setTimeout(loadSPConfigUI, 100);
+    return;
+  }
+  // Clear any lingering save-success message from a previous visit
+  if (window._spCfgMsgTimer) { clearTimeout(window._spCfgMsgTimer); window._spCfgMsgTimer = null; }
+  var msg = el('sp-cfg-msg'); if (msg) msg.style.display = 'none';
   el('cfg-clientId').value    = GRAPH_CFG.clientId  || '';
   el('cfg-tenantId').value    = GRAPH_CFG.tenantId  || '';
   el('cfg-siteUrl').value     = GRAPH_CFG.siteUrl   || '';
@@ -4066,7 +4080,8 @@ function saveSPConfig() {
   el('sp-last-saved').textContent = 'Last saved: ' + ts;
   var msg = el('sp-cfg-msg');
   msg.style.display = 'block';
-  setTimeout(function(){ msg.style.display = 'none'; }, 5000);
+  if (window._spCfgMsgTimer) clearTimeout(window._spCfgMsgTimer);
+  window._spCfgMsgTimer = setTimeout(function(){ msg.style.display = 'none'; }, 5000);
   showToast('SharePoint config saved ✔', 'ok');
 }
 
@@ -4101,6 +4116,18 @@ async function testSPConnection() {
   var siteIdEl = document.getElementById('cfg-siteId');
   var listsEl  = document.getElementById('sp-lists-status');
   if (!dot || !txt) return;
+
+  // Apply current form values to GRAPH_CFG before testing
+  var formClientId = (document.getElementById('cfg-clientId') || {}).value;
+  var formTenantId = (document.getElementById('cfg-tenantId') || {}).value;
+  var formScopes   = ((document.getElementById('cfg-scopes') || {}).value || '').split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
+  if (formClientId) GRAPH_CFG.clientId = formClientId.trim();
+  if (formTenantId) GRAPH_CFG.tenantId = formTenantId.trim();
+  if (formScopes.length) GRAPH_CFG.scopes = formScopes;
+  // Re-init MSAL with updated config so token request uses current credentials
+  msalApp = null;
+  initMSALApp();
+
   dot.style.background  = '#f59e0b';
   dot.style.animation   = 'pulse 1s infinite';
   txt.style.color       = '#d97706';

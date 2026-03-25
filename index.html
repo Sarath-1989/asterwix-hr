@@ -1384,7 +1384,7 @@ input:checked+.slider:before{transform:translateX(18px)}
               <tbody id="sp-role-mgmt-body">
                 <tr style="border-bottom:1px solid var(--bord)">
                   <td style="padding:10px 12px;font-weight:700;color:var(--tx)">Sarath</td>
-                  <td style="padding:10px 12px;color:var(--t2);font-family:'JetBrains Mono',monospace;font-size:11px">connect@asterwix.com</td>
+                  <td style="padding:10px 12px;color:var(--t2);font-family:'JetBrains Mono',monospace;font-size:11px"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7c1f131212191f083c1d0f08190e0b1504521f1311">[email&#160;protected]</a></td>
                   <td style="padding:10px 12px">
                     <select class="finput" style="width:auto;padding:5px 10px;font-size:12px">
                       <option selected>Admin</option>
@@ -1398,7 +1398,7 @@ input:checked+.slider:before{transform:translateX(18px)}
                 </tr>
                 <tr>
                   <td style="padding:10px 12px;font-weight:700;color:var(--tx)">Anne Therese George</td>
-                  <td style="padding:10px 12px;color:var(--t2);font-family:'JetBrains Mono',monospace;font-size:11px">anne@asterwix.com</td>
+                  <td style="padding:10px 12px;color:var(--t2);font-family:'JetBrains Mono',monospace;font-size:11px"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="781916161d38190b0c1d0a0f1100561b1715">[email&#160;protected]</a></td>
                   <td style="padding:10px 12px">
                     <select class="finput" style="width:auto;padding:5px 10px;font-size:12px">
                       <option>Admin</option>
@@ -1636,7 +1636,7 @@ input:checked+.slider:before{transform:translateX(18px)}
 <div id="toast"></div>
 
 <!-- MSAL.js for Microsoft Authentication -->
-<script src="https://unpkg.com/@azure/msal-browser@2.38.3/lib/msal-browser.min.js"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://unpkg.com/@azure/msal-browser@2.38.3/lib/msal-browser.min.js"></script>
 <script>
 function safePushState(s,t,u){try{history.pushState(s,t,u);}catch(e){}}
 
@@ -4333,7 +4333,17 @@ async function testSPConnection() {
   var txt  = document.getElementById('sp-status-text');
   var siteIdEl = document.getElementById('cfg-siteId');
   var listsEl  = document.getElementById('sp-lists-status');
-  if (!dot || !txt) return;
+
+  // If the status dot/text elements aren't present (e.g. called from the
+  // Diagnostics card rather than the main config card), use stub objects so
+  // the function continues instead of silently returning.
+  if (!dot) { dot = { style: {} }; }
+  if (!txt) { txt = { style: {}, textContent: '' }; }
+
+  // Show a "connecting" state in the lists panel immediately
+  if (listsEl) {
+    listsEl.innerHTML = '<div style="font-size:11px;color:#d97706;font-weight:600">&#9654; Connecting to SharePoint…</div>';
+  }
 
   // Apply current form values to GRAPH_CFG before testing
   var formClientId = (document.getElementById('cfg-clientId') || {}).value;
@@ -4383,15 +4393,18 @@ async function testSPConnection() {
           '<span style="color:var(--muted);font-weight:400">' + (ok ? 'found' : optional ? 'not found (optional)' : 'MISSING') + '</span>' +
         '</div>';
       } catch(e) {
-        lHtml += '<div style="font-size:11px;color:#b91c1c;font-family:\'JetBrains Mono\',monospace">' + lName + ' — error</div>';
+        lHtml += '<div style="font-size:11px;color:#b91c1c;font-family:\'JetBrains Mono\',monospace">' + lName + ' — error: ' + e.message + '</div>';
       }
     }
-    if (listsEl) listsEl.innerHTML = lHtml;
+    if (listsEl) listsEl.innerHTML = lHtml || '<div style="font-size:11px;color:var(--mu)">No lists checked.</div>';
   } catch(e) {
-    dot.style.background = '#ef4444';
+    dot.style.background = '#e53e3e';
     dot.style.animation  = '';
-    txt.style.color      = '#b91c1c';
-    txt.textContent      = '✖ Connection failed — ' + (e.message || 'Unknown error');
-    showToast('SP connection failed: ' + e.message, 'danger');
+    txt.style.color      = '#e53e3e';
+    txt.textContent      = '✘ Connection failed: ' + e.message;
+    if (listsEl) listsEl.innerHTML = '<div style="font-size:11px;color:#b91c1c;font-weight:600">&#10008; ' + e.message + '</div>';
   }
 }
+</script>
+</body>
+</html>
